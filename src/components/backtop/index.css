@@ -1,0 +1,45 @@
+.btn-back-top {
+  border: 1px solid transparent;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #bc2228;
+  color: #fff;
+  animation: fadeUp 0.3s linear;
+  transition: all 0.5s ease;
+  height: 45px;
+}
+
+.arrow {
+  animation: loopArrow 3s infinite;
+  transition: all 0.5s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes loopArrow {
+  0% {
+    transform: translateY(0.6rem);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+}

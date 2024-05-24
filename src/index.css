@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ẩn các nút tăng giảm trong trình duyệt WebKit/Blink */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Tùy chọn cho Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+.ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
+  border-color: var(--ck-color-base-border);
+  max-height: 1000px;
+  min-height: 1000px;
+  overflow: auto;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.fade-down {
+  animation: fadeDown 0.2s linear;
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+label {
+  font-weight: 500;
+}
+
+.ql-editor {
+  min-height: 300px;
+  max-height: 300px;
+  overflow-y: auto !important;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #b2babb;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #7f8c8d;
+}
+@media (max-width: 768px) {
+  h1 {
+    font-size: 32px !important;
+    text-align: center !important;
+  }
+  .btn-back-top {
+    display: none;
+  }
+}
+
+.ckEditor img {
+  max-width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .responsive-course {
+    flex-direction: column !important;
+  }
+
+  .responsive-video {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .responsive-stack {
+    width: 100vw !important;
+  }
+
+  .responsive-stack-item {
+    width: 100% !important;
+  }
+
+  .responsive-video .video-course {
+    padding: 0 20px !important;
+  }
+
+  .ckEditor > div {
+    overflow-x: auto;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .responsive-video .video-course {
+    padding: 0 20px !important;
+  }
+}
+/* Thay đổi track của scrollbar */
+::-webkit-scrollbar {
+  width: 6px; /* Điều chỉnh độ rộng của thanh cuộn */
+}
+
+/* Thay đổi track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Điều chỉnh màu nền của track */
+}
+
+/* Thay đổi thumb */
+::-webkit-scrollbar-thumb {
+  background: #bc2228; /* Điều chỉnh màu của thumb */
+}
+
+.active {
+  color: #bc2228 !important;
+}
