@@ -6,11 +6,13 @@ export default function NotFound() {
       <div className="error-box">
         <div className="error-logo">
           <a href="/">
-            <img
-              src="https://rikkei.edu.vn/wp-content/uploads/2024/01/logo-rikkei2.png"
-              className="img-fluid"
-              alt="Logo"
-            />
+            <div className="footer-logo">
+              <img
+                  src="assets/img/img.png"
+                  className=""
+                  alt="Logo"
+              />
+            </div>
           </a>
         </div>
         <div className="error-box-img">

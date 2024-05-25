@@ -3,7 +3,7 @@ import CourseCard from "../../../components/CourseCard/CourseCard";
 import { CircularProgress, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function NewCourses({ allCourses, isLoading }) {
+function NewCourses({ allCourses, isLoading, user }) {
   return (
     <section className="section new-course">
       <div className="container">
@@ -41,7 +41,7 @@ function NewCourses({ allCourses, isLoading }) {
             ) : (
               allCourses?.map((item, index) => (
                 <Fragment key={index}>
-                  <CourseCard item={item} />
+                  <CourseCard item={item}  user={user}/>
                 </Fragment>
               ))
             )}

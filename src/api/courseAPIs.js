@@ -35,6 +35,28 @@ export const getMyCourses = async () => {
     }
 };
 
+export const getCourseMostRegistered = async (page, size) => {
+    try {
+        const response = await jsonAxios.get(
+            `/api/v1/course/paging-course-most-registered?page=${page}&size=${size}`
+        );
+        return response.data;
+    } catch (error) {
+        notify("error", "Có lỗi xảy ra khi lấy dữ liệu getCourseMostRegistered");
+    }
+};
+
+export const getCourseFavourite = async (page, size) => {
+    try {
+        const response = await jsonAxios.get(
+            `/api/v1/course/paging-course-favourite?page=${page}&size=${size}`
+        );
+        return response.data;
+    } catch (error) {
+        notify("error", "Có lỗi xảy ra khi lấy dữ liệu getCourseFavourite");
+    }
+};
+
 export const getOneCourses = async (id) => {
     try {
         const response = await jsonAxios.get(`/api/v1/course/${id}`);

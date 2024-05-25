@@ -6,7 +6,7 @@ import { getAllCoursesAPI } from "../../../redux/reducer/courseSlice";
 import { Link } from "react-router-dom";
 import { CircularProgress, Grid } from "@mui/material";
 
-function TrendingCourse({ allCourses, isLoading }) {
+function TrendingCourse({ allCourses, isLoading, user }) {
   const teacher = [
     {
       img: "assets/img/teacher/t1.jpg",
@@ -78,7 +78,7 @@ function TrendingCourse({ allCourses, isLoading }) {
             <>
               {allCourses?.map((item, index) => (
                 <Fragment key={index}>
-                  <CardCourseTrending item={item} />
+                  <CardCourseTrending item={item}  user={user}/>
                 </Fragment>
               ))}
             </>

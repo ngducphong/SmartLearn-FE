@@ -1,9 +1,7 @@
 import React, {Fragment, useEffect, useState} from "react";
 import CategoryCard from "../../../components/CategoryCard/CategoryCard";
 import {Link} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
 import {getAllCourses, getMyCourses} from "../../../api/courseAPIs.js";
-import {getAllCoursesAPI} from "../../../redux/reducer/courseSlice.js";
 
 export default function TopCategory() {
     const [category, setCategory] = useState([])

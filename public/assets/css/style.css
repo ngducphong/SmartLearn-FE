@@ -785,7 +785,7 @@ button.bg-danger:hover {
   -webkit-justify-content: space-between;
   -ms-flex-pack: space-between;
   position: relative;
-  height: 70px;
+  height: 80px;
   padding: 0 20px;
   margin-bottom: 0;
   transition-duration: 0.4s;
@@ -25368,4 +25368,16 @@ input[type="password"]::-ms-clear {
   gap: 0px !important;
   opacity: 0px !important;
 
+}
+
+.priceplu {
+  font-size: 1.5rem; /* Kích thước chữ lớn hơn một chút để dễ nhìn */
+  font-weight: bold; /* Chữ đậm để làm nổi bật */
+  color: #ff6600; /* Màu sắc để nổi bật, bạn có thể chọn màu khác theo ý muốn */
+  margin: 10px 0; /* Khoảng cách phía trên và dưới */
+}
+
+.priceplu::after {
+  margin-right: 5px; /* Khoảng cách giữa ký hiệu tiền tệ và số tiền */
+  color: #ff6600; /* Màu sắc của ký hiệu tiền tệ */
 }
