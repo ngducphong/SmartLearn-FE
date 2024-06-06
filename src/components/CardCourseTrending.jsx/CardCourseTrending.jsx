@@ -49,11 +49,6 @@ export default function CardCourseTrending({item, user}) {
               <p> {item.totalFavourite} Lượt thích</p>
             </span>
                         </div>
-                        {/* <div className="all-btn all-category d-flex align-items-center">
-            <a href="checkout.html" className="btn btn-primary">
-              BUY NOW
-            </a>
-          </div> */}
                     </div>
                 </div>
             </Link>

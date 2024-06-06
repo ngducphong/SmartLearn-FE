@@ -13,6 +13,7 @@ import UserMangagement from "../pages/admin/user_management";
 import LearningCourse from "../pages/user/LearningCourse/LearningCourse";
 import AllCourses from "../pages/user/AllCourses/AllCourses";
 import NotFound from "../pages/notfound/NotFound";
+import PayMentCourse from "../pages/user/PayMent/PayMentCourse.jsx";
 const routesConfig = [
   {
     path: "/admin",
@@ -33,6 +34,7 @@ const routesConfig = [
       { path: "/", element: <Home /> },
       { path: "/courses", element: <AllCourses /> },
       { path: "/courseDetail/:id", element: <CourseDetail /> },
+      { path: "/payMentCourse/:id", element: <PayMentCourse /> },
     ],
   },
   { path: "/login", element: <Login /> },

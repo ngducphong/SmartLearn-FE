@@ -1,11 +1,12 @@
 import React, {useState, useEffect, memo, useRef} from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import {Divider, Button, Input} from "antd";
+import {Divider, Button, Input, Space, Dropdown} from "antd";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "./index.css";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {toolbarOptions, formats} from "../../utils/toolbarOptions";
+import {getAllCategory} from "../../api/categoryAPIs.js";
 
 function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
     const [imageUrl, setImageUrl] = useState("");
@@ -18,6 +19,19 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
     const [courseStatus, setCourseStatus] = useState(
         courseInfo?.voided ? "inactive" : "active"
     );
+    const [categoryShow, setCategoryShow] = useState("");
+    const [categoryId, setCategoryId] = useState();
+    const [categoryList, setCategoryList] = useState();
+
+    const getListCategory = async () => {
+        const data = await getAllCategory();
+        setCategoryList(data);
+
+    }
+    useEffect(() => {
+        getListCategory();
+    }, []);
+
     const handleClickOutside = (event) => {
         if (formRef.current && !formRef.current.contains(event.target)) {
             closeFormEdit(); // Đóng form nếu click bên ngoài form
@@ -28,7 +42,7 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
         if (courseInfo) {
             setTitle(courseInfo.title);
             setDescription(courseInfo.description);
-            setImageUrl("http://localhost:8080/img/"+courseInfo.image);
+            setImageUrl("http://localhost:8080/img/" + courseInfo.image);
             setSubDescription(courseInfo.subDescription);
             setPrice(courseInfo.price);
         }
@@ -67,6 +81,25 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
         setPrice("")
     };
 
+    const handleSetCategory = (name, id) => {
+        setCategoryShow(name);
+        setCategoryId(id);
+    }
+    const items = categoryList?.map(
+        item => (
+            {
+                key: item.id,
+                label: (
+                    <p target="_blank" rel="noopener noreferrer" onClick={() => {
+                        handleSetCategory(item.name, item.id)
+                    }}>
+                        {item.name}
+                    </p>
+                ),
+            }
+        )
+    )
+
     return (
         <>
             <div className="overlay" onClick={handleClickOutside}>
@@ -80,6 +113,34 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
                             onClick={closeFormEdit}
                             className="cursor-pointer hover:text-gray-500"
                         />
+                    </div>
+
+                    <div className="App">
+                        <p>hello</p>
+                        <video width="750" height="500" controls >
+                            <source src="https://firebasestorage.googleapis.com/v0/b/smart-learn-e5bc7.appspot.com/o/0b049078-bc38-4b6d-9c39-8b3efa0ad12d.3gp?alt=media" type="video/mp4" />
+                        </video>
+                    </div>
+                    <div>
+                        <label style={{display: 'block', marginBottom: '8px'}} htmlFor="">
+                            Chọn danh mục
+                        </label>
+
+                        <Space direction="vertical">
+                            <Space wrap>
+                                <Dropdown
+                                    menu={{
+                                        items,
+                                    }}
+                                    placement="bottomLeft"
+                                    arrow
+                                >
+                                    <Button style={{width: '15rem'}}>
+                                        {categoryShow === "" ? ("Chọn danh mục") : categoryShow}
+                                    </Button>
+                                </Dropdown>
+                            </Space>
+                        </Space>
                     </div>
                     <div className="grid grid-cols-2 gap-5 mt-3">
                         <div>
@@ -141,9 +202,7 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
                                         checked={courseStatus === "active"}
                                         onChange={() => setCourseStatus("active")}
                                     />
-                                    <span className="text-green-600 font-bold">
-                    Đang hoạt động
-                  </span>
+                                    <span className="text-green-600 font-bold">Đang hoạt động </span>
                                 </label>
                                 <label>
                                     <input

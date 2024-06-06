@@ -46,7 +46,7 @@ export default function CourseCard({item, user}) {
                         </div>
                         <div className="all-btn all-category d-flex align-items-center">
                             <a href="checkout.html" className="btn btn-primary">
-                                BUY NOW
+                                MUA NGAY
                             </a>
                         </div>
                     </div>

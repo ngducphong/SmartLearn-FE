@@ -1,75 +1,78 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {useState} from "react";
+import {Link} from "react-router-dom";
+import {Button} from "antd";
+import {HeartFilled, HeartOutlined} from "@ant-design/icons";
+import {favouriteCourse} from "../../api/courseAPIs.js";
 
-export default function CourseList({ item, isLogin }) {
-  return (
-    <div className="col-lg-12 col-md-12 d-flex">
-      <div className="course-box course-design list-course d-flex">
-        <div className="product">
-          <div className="product-img">
-            <a href="">
-              <img className="img-fluid" alt="" src={item.image} />
-            </a>
-          </div>
-          <div className="product-content">
-            <div className="head-course-title">
-              <h3 className="title">
-                <a>{item.title}</a>
-              </h3>
-              <div className="all-btn all-category d-flex align-items-center">
-                <Link
-                  to={isLogin ? `/courseDetail/${item.id}` : '/login'}
-                  className="btn btn-primary"
-                >
-                  HỌC NGAY
-                </Link>
-              </div>
-            </div>
-            <div className="course-info border-bottom-0 pb-0 d-flex align-items-center">
-              <div className="rating-img d-flex align-items-center">
-                <img src="assets/img/icon/icon-01.svg" alt="" />
-                <p>12+ Lesson</p>
-              </div>
-              <div className="course-view d-flex align-items-center">
-                <img src="assets/img/icon/icon-02.svg" alt="" />
-                <p>9hr 30min</p>
-              </div>
-            </div>
-            <div className="rating">
-              <i className="fas fa-star filled" />
-              <i className="fas fa-star filled" />
-              <i className="fas fa-star filled" />
-              <i className="fas fa-star filled" />
-              <i className="fas fa-star" />
-              <span className="d-inline-block average-rating">
-                <span>4.0</span> (15)
-              </span>
-            </div>
-            <div className="course-group d-flex mb-0">
-              <div className="course-group-img d-flex">
-                <a href="">
-                  <img
-                    src="assets/img/user/user1.jpg"
-                    alt=""
-                    className="img-fluid"
-                  />
-                </a>
-                <div className="course-name">
-                  <h4>
-                    <a href="">Rolands R</a>
-                  </h4>
-                  <p>Instructor</p>
+export default function CourseList({item, isLogin, isMyCourse}) {
+    const [isLike, setIsLike] = useState(false);
+    const handleFavourite =  async (id) => {
+        await favouriteCourse(id);
+        setIsLike(true);
+    }
+    return (
+        <div className="col-lg-12 col-md-12 d-flex">
+            <div className="course-box course-design list-course d-flex">
+                <div className="product">
+                    <div className="product-img">
+                        <img className="img-fluid" alt="" src={"http://localhost:8080/img/" + item.image}/>
+                    </div>
+                    <div className="product-content">
+                        <div className="head-course-title">
+                            <h4 className="title">
+                                <a>{item.title}</a>
+                            </h4>
+                            <div className="all-btn all-category d-flex align-items-center">
+                                {
+                                    isMyCourse === true ? (
+                                        <Link
+                                            to={`/courseDetail/${item.id}`}
+                                            className="btn btn-primary"
+                                        >
+                                            HỌC NGAY
+                                        </Link>
+                                    ) : (
+                                        (item.isRegister !== null && item.isRegister === true) ?
+                                            (<Link
+                                                to={`/courseDetail/${item.id}`}
+                                                className="btn btn-primary"
+                                            >
+                                                HỌC NGAY
+                                            </Link>)
+                                            :
+                                            (
+                                                // đoạn này chuyển đến trang thanh toán
+                                                <Link
+                                                    to={isLogin ? `/${item.id}` : '/login'}
+                                                    className="btn btn-primary"
+                                                >
+                                                    MUA NGAY
+                                                </Link>
+                                            )
+                                    )
+                                }
+                            </div>
+                        </div>
+                        <div>
+                            <h3 className="title">
+                                {item.subDescription}
+                            </h3>
+                        </div>
+                        <div>
+                            <div dangerouslySetInnerHTML={{__html: item.description}}/>
+                        </div>
+
+                        {isMyCourse === true && <div className="course-group d-flex mb-0">
+                            <div className="course-share d-flex align-items-center justify-content-center">
+                                <Button icon={
+                                    (item.isFavourite || isLike) ?  <HeartFilled className={"text-rose-500"}/>: <HeartOutlined />
+                                }
+                                        onClick={() => {handleFavourite(item.id) }}/>
+                            </div>
+                        </div>}
+                    </div>
                 </div>
-              </div>
-              <div className="course-share d-flex align-items-center justify-content-center">
-                <a href="#rate">
-                  <i className="fa-regular fa-heart" />
-                </a>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

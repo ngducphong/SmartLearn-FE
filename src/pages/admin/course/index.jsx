@@ -75,17 +75,25 @@ export default function Course() {
       title: "Ngày tạo",
       dataIndex: "createDate",
       align: "center",
-      render: (text) => <p>{text}</p>,
+      render: (createDate) => {
+        const date = new Date(createDate);
+        const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+        return <p>{formattedDate}</p>;
+      },
     },
     {
       title: "Giá tiền",
       dataIndex: "price",
       align: "center",
-      render: (text) => <p>{text}</p>,
+      render: (price) => {
+        // Định dạng giá tiền thành chuỗi tiền tệ
+        const formattedPrice = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+        return <p>{formattedPrice}</p>;
+      },
     },
     {
       title: "Mô tả",
-      dataIndex: "createDate",
+      dataIndex: "description",
       align: "center",
       render: (_, item) => (
         <button onClick={() => handleShowModal(item.description)}>

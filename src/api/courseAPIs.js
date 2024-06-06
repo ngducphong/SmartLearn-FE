@@ -24,12 +24,20 @@ export const getAllCourses = async (page, searchValue, size, home) => {
     }
 };
 
-export const getMyCourses = async () => {
+export const getMyCourses = async (page, searchValue, size) => {
     try {
-        const response = await jsonAxios.get(
-            `api/v1/course/get-my-course`
-        );
-        return response.data;
+        if (searchValue) {
+            const response = await jsonAxios.get(
+                `/api/v1/course/get-my-course?page=${page}&size=${size}&title=${searchValue}`
+            );
+            return response.data;
+        }else {
+            const response = await jsonAxios.get(
+                `api/v1/course/get-my-course?page=${page}&size=${size}`
+            );
+            return response.data;
+        }
+
     } catch (error) {
         notify("error", "Có lỗi xảy ra khi lấy dữ liệu getMyCourses");
     }
@@ -68,10 +76,11 @@ export const getOneCourses = async (id) => {
 export const addNewCourse = async (newCourse) => {
     let formData = new FormData();
     formData.append("title", newCourse.title);
-    formData.append("imageFile", newCourse.imageFile);
+    newCourse.imageFile && formData.append("imageFile",  newCourse.imageFile); // Đảm bảo rằng imageFile là một đối tượng MultipartFile
+    newCourse.price && formData.append("price", newCourse.price);
     formData.append("description", newCourse.description);
     formData.append("subDescription", newCourse.subDescription);
-    formData.append("price", newCourse.price);
+    formData.append("categoryId", newCourse.categoryId);
     try {
         const response = await formDataAxios.post("/api/v1/course/save", formData);
         notify("success", "Thêm khóa học thành công");
@@ -89,11 +98,13 @@ export const editCourse = async (course) => {
     if (course.imageFile) {
         formData.append("imageFile", course.imageFile);
     }
+    formData.append("categoryId", course.categoryId);
     formData.append("title", course.title);
     formData.append("description", course.description);
     formData.append("subDescription", course.subDescription);
     formData.append("voided", course.voided);
     formData.append("price", course.price);
+    formData.append("categoryId", newCourse.categoryId);
     try {
         const response = await formDataAxios.put(
             `/api/v1/course/update/${course.id}`,
@@ -124,5 +135,14 @@ export const getImgCourse = async (url) => {
         return await formDataAxios.get(`/img/${url}`);
     } catch (error) {
         notify("error", error.response.data);
+    }
+};
+
+export const favouriteCourse = async (id) => {
+    try {
+        const response = await jsonAxios.put(`/api/v1/user-course/favourite/${id}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
     }
 };

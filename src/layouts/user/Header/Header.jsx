@@ -18,14 +18,7 @@ export default function Header() {
     return savedUser || null;
   });
 
-  const [myCourses, setMyCourses] = useState([]);
-  const gmyCourses = async () => {
-    const courses = await getMyCourses();
-    setMyCourses(courses);
-  };
-  useEffect(() => {
-    gmyCourses()
-  }, []);
+
 
   useEffect(() => {
     dispatch(getAllCoursesAPI({ page: 0, size: 6, home: "home" }));
@@ -89,40 +82,42 @@ export default function Header() {
                   </a>
                 </li>
                 <li className="has-submenu">
+
                   <NavLink to="/courses">
-                    Khóa học <i className="fas fa-chevron-down" />
+                    Khóa học
+                    {/*<i className="fas fa-chevron-down" />*/}
                   </NavLink>
-                  <ul className="submenu">
-                    <li className="has-submenu">
-                      <Link to="/courses">Các khóa học</Link>
-                      <ul className="submenu">
-                        {allCourses?.map((item, index) => (
-                          <li key={index}>
-                            <Link to={user ? `/courseDetail/${item.id}` : '/login'}>
-                              {item.title}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                    {user && <li className="has-submenu">
-                      <a to="">Khóa học của tôi</a>
-                      <ul className="submenu">
-                        {myCourses?.map((item, index) => (
-                            <li key={index}>
-                              <Link to={user ? `/courseDetail/${item.id}` : '/login'}>
-                                {item.title}
-                              </Link>
-                            </li>
-                        ))}
-                      </ul>
-                    </li>}
-                  </ul>
+                  {/*<ul className="submenu">*/}
+                  {/*  <li className="has-submenu">*/}
+                  {/*    <Link to="/courses">Các khóa học</Link>*/}
+                  {/*    <ul className="submenu">*/}
+                  {/*      {allCourses?.map((item, index) => (*/}
+                  {/*        <li key={index}>*/}
+                  {/*          <Link to={user ? `/courseDetail/${item.id}` : '/login'}>*/}
+                  {/*            {item.title}*/}
+                  {/*          </Link>*/}
+                  {/*        </li>*/}
+                  {/*      ))}*/}
+                  {/*    </ul>*/}
+                  {/*  </li>*/}
+                  {/*  {user && <li className="has-submenu">*/}
+                  {/*    <a to="">Khóa học của tôi</a>*/}
+                  {/*    <ul className="submenu">*/}
+                  {/*      {myCourses?.map((item, index) => (*/}
+                  {/*          <li key={index}>*/}
+                  {/*            <Link to={user ? `/courseDetail/${item.id}` : '/login'}>*/}
+                  {/*              {item.title}*/}
+                  {/*            </Link>*/}
+                  {/*          </li>*/}
+                  {/*      ))}*/}
+                  {/*    </ul>*/}
+                  {/*  </li>}*/}
+                  {/*</ul>*/}
                 </li>
 
-                <li className="has-submenu">
-                  <a href="">Bài viết</a>
-                </li>
+                {/*<li className="has-submenu">*/}
+                {/*  <a href="">Bài viết</a>*/}
+                {/*</li>*/}
                 <li className="login-link">
                   <a href="/login">Login / Signup</a>
                 </li>

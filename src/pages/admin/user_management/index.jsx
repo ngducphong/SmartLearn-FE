@@ -41,6 +41,7 @@ export default function UserMangagement() {
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
     };
+    const roles = ["Admin", "User", "Guest"];
 
     const columns = [
         {
@@ -77,6 +78,23 @@ export default function UserMangagement() {
             title: "Ngày tạo",
             dataIndex: "createDate",
             align: "center",
+            render: (createDate) => {
+                const date = new Date(createDate);
+                const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+                return <p>{formattedDate}</p>;
+            },
+        },
+        {
+            title: "Quyền",
+            dataIndex: "role",
+            align: "center",
+            render: (roles) => (
+                <div>
+                    {roles.map((role, index) => (
+                        <p key={index}>{role}</p>
+                    ))}
+                </div>
+            ),
         },
         {
             title: "Trạng thái",

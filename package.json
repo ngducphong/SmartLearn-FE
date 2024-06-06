@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.7",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.14",
@@ -18,9 +19,11 @@
     "@reduxjs/toolkit": "^2.2.2",
     "antd": "^5.15.3",
     "axios": "^1.6.8",
+    "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "firebase": "^10.9.0",
     "highlight.js": "^11.9.0",
+    "jquery": "^3.7.1",
     "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
