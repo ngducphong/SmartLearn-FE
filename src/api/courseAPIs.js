@@ -103,8 +103,8 @@ export const editCourse = async (course) => {
     formData.append("description", course.description);
     formData.append("subDescription", course.subDescription);
     formData.append("voided", course.voided);
-    formData.append("price", course.price);
-    formData.append("categoryId", newCourse.categoryId);
+    course.price && formData.append("price", course.price);
+    formData.append("categoryId", course.categoryId);
     try {
         const response = await formDataAxios.put(
             `/api/v1/course/update/${course.id}`,

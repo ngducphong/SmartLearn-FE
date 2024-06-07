@@ -68,3 +68,15 @@ export const deleteCategory = async (id) => {
     notify("error", "Có lỗi khi xóa");
   }
 };
+
+export const getCategoryByCourseId = async (id) => {
+  try {
+    const response = await jsonAxios.get(
+        `api/v1/category/get-category-by-course/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    notify("error", "Bạn không có quyền xem trang này");
+  }
+};

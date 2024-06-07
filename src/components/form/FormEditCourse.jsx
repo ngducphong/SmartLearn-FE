@@ -6,7 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import "./index.css";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {toolbarOptions, formats} from "../../utils/toolbarOptions";
-import {getAllCategory} from "../../api/categoryAPIs.js";
+import {getAllCategory, getCategoryByCourseId} from "../../api/categoryAPIs.js";
 
 function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
     const [imageUrl, setImageUrl] = useState("");
@@ -26,16 +26,22 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
     const getListCategory = async () => {
         const data = await getAllCategory();
         setCategoryList(data);
-
+    }
+    const getCategoryByCourse = async (id) => {
+        const data = await getCategoryByCourseId(id);
+        setCategoryShow(data.name)
+        setCategoryId(data.id)
     }
     useEffect(() => {
         getListCategory();
+        getCategoryByCourse(courseInfo.id);
+
     }, []);
 
     const handleClickOutside = (event) => {
-        if (formRef.current && !formRef.current.contains(event.target)) {
-            closeFormEdit(); // Đóng form nếu click bên ngoài form
-        }
+        // if (formRef.current && !formRef.current.contains(event.target)) {
+        //     closeFormEdit(); // Đóng form nếu click bên ngoài form
+        // }
     };
     // Gán giá trị cho các state từ props courseInfo khi component được render
     useEffect(() => {
@@ -45,6 +51,7 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
             setImageUrl("http://localhost:8080/img/" + courseInfo.image);
             setSubDescription(courseInfo.subDescription);
             setPrice(courseInfo.price);
+
         }
     }, [courseInfo]);
 
@@ -70,6 +77,7 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
             subDescription,
             price,
             voided: courseStatus === "active" ? false : true,
+            categoryId,
         });
         resetField();
     };
@@ -115,12 +123,6 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
                         />
                     </div>
 
-                    <div className="App">
-                        <p>hello</p>
-                        <video width="750" height="500" controls >
-                            <source src="https://firebasestorage.googleapis.com/v0/b/smart-learn-e5bc7.appspot.com/o/0b049078-bc38-4b6d-9c39-8b3efa0ad12d.3gp?alt=media" type="video/mp4" />
-                        </video>
-                    </div>
                     <div>
                         <label style={{display: 'block', marginBottom: '8px'}} htmlFor="">
                             Chọn danh mục

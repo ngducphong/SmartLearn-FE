@@ -25381,3 +25381,7 @@ input[type="password"]::-ms-clear {
   margin-right: 5px; /* Khoảng cách giữa ký hiệu tiền tệ và số tiền */
   color: #ff6600; /* Màu sắc của ký hiệu tiền tệ */
 }
+
+#video-container .download-button {
+  display: none;
+}
