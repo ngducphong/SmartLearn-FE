@@ -14470,7 +14470,7 @@ input[type="password"]::-ms-clear {
   box-shadow: none !important;
 }
 .ck.ck-editor__editable {
-  height: 100px !important;
+  height: 200px !important;
 }
 .img-deposit-ticket {
   margin-left: auto;

@@ -15,8 +15,8 @@ input[type="number"] {
 }
 .ck.ck-editor__main > .ck-editor__editable:not(.ck-focused) {
   border-color: var(--ck-color-base-border);
-  max-height: 1000px;
-  min-height: 1000px;
+  /*max-height: 1000px;*/
+  /*min-height: 1000px;*/
   overflow: auto;
 }
 .overlay {

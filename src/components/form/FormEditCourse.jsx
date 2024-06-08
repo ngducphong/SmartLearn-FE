@@ -144,7 +144,7 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
                             </Space>
                         </Space>
                     </div>
-                    <div className="grid grid-cols-2 gap-5 mt-3">
+                    <div className="grid grid-cols-2 gap-3 mt-3">
                         <div>
                             <label htmlFor="">Tên khóa học</label>
                             <Input

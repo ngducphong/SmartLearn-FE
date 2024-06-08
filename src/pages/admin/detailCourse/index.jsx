@@ -205,70 +205,70 @@ export default function DetailCourse() {
               {chapters[0]?.courseName}{" "}
             </h1>
             <div className="my-0 mx-auto max-w-[1500px]">
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  "& > *": {
-                    m: 1,
-                  },
-                }}
-              >
-                {selectedLesson ? (
-                  <ButtonGroup
-                    variant="outlined"
-                    aria-label="Basic button group"
-                  >
-                    <Button
-                      onClick={() => setChoice("video")}
-                      startIcon={<YouTubeIcon />}
-                    >
-                      video
-                    </Button>
-                    <Button
-                      onClick={() => setChoice("lesson")}
-                      startIcon={<SourceIcon />}
-                    >
-                      Bài học
-                    </Button>
-                    {choice === "lesson" ? (
-                      <Button
-                        onClick={handleSaveDescription}
-                        startIcon={
-                          isSaving ? (
-                            <CircularProgress size={20} color="inherit" />
-                          ) : (
-                            <SaveAltIcon />
-                          )
-                        }
-                        disabled={isSaving}
-                      >
-                        {isSaving ? "Đang lưu..." : "Lưu"}
-                      </Button>
-                    ) : (
-                      ""
-                    )}
-                  </ButtonGroup>
-                ) : (
-                  ""
-                )}
-              </Box>
+              {/*<Box*/}
+              {/*  sx={{*/}
+              {/*    display: "flex",*/}
+              {/*    alignItems: "center",*/}
+              {/*    "& > *": {*/}
+              {/*      m: 1,*/}
+              {/*    },*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  {selectedLesson ? (*/}
+              {/*    <ButtonGroup*/}
+              {/*      variant="outlined"*/}
+              {/*      aria-label="Basic button group"*/}
+              {/*    >*/}
+              {/*      <Button*/}
+              {/*        onClick={() => setChoice("video")}*/}
+              {/*        startIcon={<YouTubeIcon />}*/}
+              {/*      >*/}
+              {/*        video*/}
+              {/*      </Button>*/}
+              {/*      <Button*/}
+              {/*        onClick={() => setChoice("lesson")}*/}
+              {/*        startIcon={<SourceIcon />}*/}
+              {/*      >*/}
+              {/*        Bài học*/}
+              {/*      </Button>*/}
+              {/*      {choice === "lesson" ? (*/}
+              {/*        <Button*/}
+              {/*          onClick={handleSaveDescription}*/}
+              {/*          startIcon={*/}
+              {/*            isSaving ? (*/}
+              {/*              <CircularProgress size={20} color="inherit" />*/}
+              {/*            ) : (*/}
+              {/*              <SaveAltIcon />*/}
+              {/*            )*/}
+              {/*          }*/}
+              {/*          disabled={isSaving}*/}
+              {/*        >*/}
+              {/*          {isSaving ? "Đang lưu..." : "Lưu"}*/}
+              {/*        </Button>*/}
+              {/*      ) : (*/}
+              {/*        ""*/}
+              {/*      )}*/}
+              {/*    </ButtonGroup>*/}
+              {/*  ) : (*/}
+              {/*    ""*/}
+              {/*  )}*/}
+              {/*</Box>*/}
               <div className="flex flex-wrap justify-between">
-                <div className="rounded-2xl overflow-hidden max-w-[70%] w-full relative h-[610px] ">
-                  {choice === "video" ? (
-                    <div className="px-[100px] bg-black">
-                      <VideoComponent sourceVideo={"https://www.youtube.com/embed/"+sourceVideo.split("=")[1]} />
-                    </div>
-                  ) : (
-                    <div className="bg-slate-50">
-                      <CKEditorComponent
-                        getValue={handleGetValue}
-                        oldValue={description}
-                      />
-                    </div>
-                  )}
-                </div>
-                <div className="max-w-[28%] w-full flex flex-col bg-white max-h-[610px] p-2 overflow-y-auto">
+                {/*<div className="rounded-2xl overflow-hidden max-w-[70%] w-full relative h-[610px] ">*/}
+                {/*  {choice === "video" ? (*/}
+                {/*    <div className="px-[100px] bg-black">*/}
+                {/*      <VideoComponent sourceVideo={"https://www.youtube.com/embed/"+sourceVideo.split("=")[1]} />*/}
+                {/*    </div>*/}
+                {/*  ) : (*/}
+                {/*    <div className="bg-slate-50">*/}
+                {/*      <CKEditorComponent*/}
+                {/*        getValue={handleGetValue}*/}
+                {/*        oldValue={description}*/}
+                {/*      />*/}
+                {/*    </div>*/}
+                {/*  )}*/}
+                {/*</div>*/}
+                <div className="max-w-[90%] w-full flex flex-col bg-white max-h-[610px] p-2 overflow-y-auto">
                   {isLoading ? (
                     <>
                       {" "}
