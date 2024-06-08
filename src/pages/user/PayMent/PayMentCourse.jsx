@@ -15,48 +15,68 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import {getOneCourses} from "../../../api/courseAPIs";
 import {notify} from "../../../utils/notification";
 import Cookies from "js-cookie";
+import {Button, Card, Statistic} from "antd";
+import {payment} from "../../../api/paymentAPIs.js";
+
 
 export default function PayMentCourse() {
-    const chapters = useSelector((state) => state.chapterSlice.chapters);
-    const lesson = useSelector((state) => state.lessonSlice.lesson);
-    const isLoading = useSelector((state) => state.chapterSlice.loading);
     const [currentCourse, setCurrentCourse] = useState(null);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const {id} = useParams();
     const handleGetDataCourse = async () => {
         const courseInfo = await getOneCourses(id);
         setCurrentCourse(courseInfo);
     };
+    const navigate = useNavigate();
     useEffect(() => {
         handleGetDataCourse();
         dispatch(getChaptersThunk(id));
         dispatch(getLessonsThunk());
     }, [dispatch, id]);
-    // Nhóm dữ liệu lại
-    const groupedContentItems = chapters?.map((chapter) => {
-        return {
-            ...chapter,
-            lessons: lesson.filter((item) => item.chapterId === chapter.id),
-        };
-    });
-    const learningCourse = () => {
-        const getAuthToken = () => Cookies.get("accessToken");
-        if (!getAuthToken()) {
-            return notify("error", "Đăng nhập để học ngay !");
+
+    const handlePayMent = async () => {
+        const getPayment = await payment(id);
+        if (!getPayment?.url) {
+            console.log("heheh")
+            navigate('/courses');
+        } else {
+            console.log("hihihi")
+            window.location.href = getPayment?.url;
         }
-        navigate(`/course/learn/${id}`);
-    };
+    }
+
+    const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        minimumFractionDigits: 0
+    });
     return (
         <div className="mt-[100px]">
-
             <section className="page-content course-sec">
+
                 <div className="container">
+                    <div style={{display: "flex"}}>
+                        <div style={{flex: 1}}>
+                            <h1 style={{textAlign: "center"}}>Mua khoá học: {currentCourse?.title}</h1>
+                        </div>
+                    </div>
                     <div className="row">
-                        <div className="col-lg-8">
+                        <div className="col-lg-12" style={{padding: "0 150px 0px 150px"}}>
                             <div className="card overview-sec">
                                 <div className="card-body">
-                                    <h5 className="subs-title">Tổng quan</h5>
+                                    <h5 className="subs-title">Tổng quan: </h5>
+                                    <div className="row">
+                                        <div className="col-md-9">
+                                            <h6 style={{color: "rgb(57, 44, 125)"}}>{currentCourse?.subDescription}</h6>
+
+                                        </div>
+                                        <div className="col-md-3">
+                                            <img src={"http://localhost:8080/img/" + currentCourse?.image} alt=""/>
+                                        </div>
+                                    </div>
+
+                                    <br/>
+
                                     <h6>Mô tả khóa học</h6>
                                     <div
                                         className="ckEditor"
@@ -64,79 +84,49 @@ export default function PayMentCourse() {
                                             __html: currentCourse?.description,
                                         }}
                                     />
-                                    <h6>What you'll learn</h6>
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <ul>
-                                                <li>Become a UX designer.</li>
-                                                <li>You will be able to add UX designer to your CV</li>
-                                                <li>Become a UI designer.</li>
-                                                <li>Build &amp; test a full website design.</li>
-                                                <li>Build &amp; test a full mobile app.</li>
-                                            </ul>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <ul>
-                                                <li>
-                                                    Learn to design websites &amp; mobile phone apps.
-                                                </li>
-                                                <li>You'll learn how to choose colors.</li>
-                                                <li>Prototype your designs with interactions.</li>
-                                                <li>Export production ready assets.</li>
-                                                <li>All the techniques used by UX professionals</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <h6>Requirements</h6>
-                                    <ul className="mb-0">
-                                        <li>
-                                            You will need a copy of Adobe XD 2019 or above. A free
-                                            trial can be downloaded from Adobe.
-                                        </li>
-                                        <li>No previous design experience is needed.</li>
-                                        <li className="mb-0">
-                                            No previous Adobe XD skills are needed.
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
 
-                        </div>
-                        <div className="col-lg-4">
-                            <div className="sidebar-sec">
-                                <div className="video-sec vid-bg">
-                                    <div className="card">
-                                        <div className="card-body">
-                                            <div className="video-details">
-                                                <div className="course-fee">
-                                                    <img src={currentCourse?.image} alt=""/>
-                                                    <h2>FREE</h2>
-                                                </div>
-                                                <div className="row gx-2">
-                                                    <div className="col-md-6">
-                                                        <a
-                                                            href="course-wishlist.html"
-                                                            className="btn btn-wish w-100"
-                                                        >
-                                                            <i className="feather-heart"/> Add to Wishlist
-                                                        </a>
+                                    <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                                        <div style={{
+                                            display: "flex",
+                                            width: "100%",
+                                            justifyContent: "center",
+                                            alignItems: "center"
+                                        }}>
+                                            <Card style={{background: "rgb(250, 250, 250)", width: "70%"}}
+                                                  bordered={false}>
+                                                {/* eslint-disable-next-line react/jsx-no-undef */}
+                                                <div style={{
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}>
+                                                    <h5>
+                                                        Tổng tiền:
+                                                    </h5>
+                                                    <div style={{marginLeft: "5px"}}>
+                                                        <Statistic
+                                                            style={{marginBottom: "8px"}}
+                                                            value={formatter.format(currentCourse?.price)}
+                                                            valueStyle={{color: 'cyan'}}
+                                                        />
                                                     </div>
-                                                    <div className="col-md-6">
-                                                        <a
-                                                            href="javascript:void(0);"
-                                                            className="btn btn-wish w-100"
-                                                        >
-                                                            <i className="feather-share-2"/> Share
-                                                        </a>
-                                                    </div>
+
                                                 </div>
-                                            </div>
+                                                <div>
+                                                    {/* eslint-disable-next-line react/jsx-no-undef */}
+                                                    <Button type="primary" style={{width: "100%"}}
+                                                            onClick={handlePayMent}>
+                                                        <h5 style={{color: "white"}}>Thanh toán</h5>
+                                                    </Button>
+                                                </div>
+
+                                            </Card>
+
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
+
                         </div>
                     </div>
                 </div>

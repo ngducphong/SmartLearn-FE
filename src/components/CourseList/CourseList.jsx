@@ -43,7 +43,7 @@ export default function CourseList({item, isLogin, isMyCourse}) {
                                             (
                                                 // đoạn này chuyển đến trang thanh toán
                                                 <Link
-                                                    to={isLogin ? `/${item.id}` : '/login'}
+                                                    to={isLogin ? `/payMentCourse/${item.id}` : '/login'}
                                                     className="btn btn-primary"
                                                 >
                                                     MUA NGAY
