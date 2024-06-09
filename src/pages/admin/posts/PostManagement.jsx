@@ -57,7 +57,8 @@ export default function PostManagement() {
 
     return (
         <div>
-            <VideoPlayer encodedURL={encodedURL} controls />
+            {/*<VideoPlayer encodedURL={encodedURL} controls />*/}
+           <video src="blob:https://embed.streamc.xyz/349be3c0-4b5c-4e54-99c3-8f1a19732a4e"></video>
         </div>
     );
 }

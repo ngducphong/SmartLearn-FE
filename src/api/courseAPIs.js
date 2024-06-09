@@ -73,6 +73,15 @@ export const getOneCourses = async (id) => {
         console.log(error);
     }
 };
+
+export const getFullCourse = async (id) => {
+    try {
+        const response = await jsonAxios.get(`/api/v1/course/getFullCourse/${id}`);
+        return response.data;
+    } catch (error) {
+        console.log(error);
+    }
+};
 export const addNewCourse = async (newCourse) => {
     let formData = new FormData();
     formData.append("title", newCourse.title);

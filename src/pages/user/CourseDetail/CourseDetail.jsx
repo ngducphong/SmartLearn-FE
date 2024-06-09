@@ -12,7 +12,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { getChaptersThunk } from "../../../redux/reducer/chapterSlice";
 import { getLessonsThunk } from "../../../redux/reducer/lessonSlice";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import { getOneCourses } from "../../../api/courseAPIs";
+import {getFullCourse, getOneCourses} from "../../../api/courseAPIs";
 import { notify } from "../../../utils/notification";
 import Cookies from "js-cookie";
 
@@ -25,7 +25,7 @@ export default function CourseDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const handleGetDataCourse = async () => {
-    const courseInfo = await getOneCourses(id);
+    const courseInfo = await getFullCourse(id);
     setCurrentCourse(courseInfo);
   };
   useEffect(() => {
@@ -78,48 +78,23 @@ export default function CourseDetail() {
             <div className="col-lg-8">
               <div className="instructor-wrap border-bottom-0 m-0">
                 <div className="about-instructor align-items-center">
-                  {/* <div className="abt-instructor-img">
-                    <a href="instructor-profile.html">
-                      <img
-                        src="assets/img/user/user1.jpg"
-                        alt="img"
-                        className="img-fluid"
-                      />
-                    </a>
-                  </div> */}
-                  {/* <div className="instructor-detail me-3">
-                    <h5>
-                      <a href="instructor-profile.html">Nicole Brown</a>
-                    </h5>
-                    <p>UX/UI Designer</p>
-                  </div> */}
-                  {/* <div className="rating mb-0">
-                    <i className="fas fa-star filled" />
-                    <i className="fas fa-star filled" />
-                    <i className="fas fa-star filled" />
-                    <i className="fas fa-star filled" />
-                    <i className="fas fa-star" />
-                    <span className="d-inline-block average-rating">
-                      <span>4.5</span> (15)
-                    </span>
-                  </div> */}
+
                 </div>
-                <span className="web-badge mb-3">WEB DEVELOPMENT</span>
               </div>
               <h2> {currentCourse?.title || "Tên khóa học"}</h2>
               <p>{currentCourse?.subDescription || "Sub Description"}</p>
               <div className="course-info d-flex align-items-center border-bottom-0 m-0 p-0">
                 <div className="cou-info">
                   <img src="assets/img/icon/icon-01.svg" alt="" />
-                  <p>{chapters.length} chương học</p>
+                  <p>{currentCourse?.totalChapter} chương học</p>
                 </div>
                 <div className="cou-info">
                   <img src="assets/img/icon/timer-icon.svg" alt="" />
-                  <p>9hr 30min</p>
+                  <p>{currentCourse?.totalLesson} bài học</p>
                 </div>
                 <div className="cou-info">
                   <img src="assets/img/icon/people.svg" alt="" />
-                  <p>32 students enrolled</p>
+                  <p>{currentCourse?.totalUser} học viên</p>
                 </div>
               </div>
             </div>
@@ -140,40 +115,6 @@ export default function CourseDetail() {
                       __html: currentCourse?.description,
                     }}
                   />
-                  <h6>What you'll learn</h6>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <ul>
-                        <li>Become a UX designer.</li>
-                        <li>You will be able to add UX designer to your CV</li>
-                        <li>Become a UI designer.</li>
-                        <li>Build &amp; test a full website design.</li>
-                        <li>Build &amp; test a full mobile app.</li>
-                      </ul>
-                    </div>
-                    <div className="col-md-6">
-                      <ul>
-                        <li>
-                          Learn to design websites &amp; mobile phone apps.
-                        </li>
-                        <li>You'll learn how to choose colors.</li>
-                        <li>Prototype your designs with interactions.</li>
-                        <li>Export production ready assets.</li>
-                        <li>All the techniques used by UX professionals</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <h6>Requirements</h6>
-                  <ul className="mb-0">
-                    <li>
-                      You will need a copy of Adobe XD 2019 or above. A free
-                      trial can be downloaded from Adobe.
-                    </li>
-                    <li>No previous design experience is needed.</li>
-                    <li className="mb-0">
-                      No previous Adobe XD skills are needed.
-                    </li>
-                  </ul>
                 </div>
               </div>
               <div className="card content-sec">
@@ -183,7 +124,7 @@ export default function CourseDetail() {
                       <h5 className="subs-title">Course Content</h5>
                     </div>
                     <div className="col-sm-6 text-sm-end">
-                      <h6>{chapters?.length} chương</h6>
+                      <h6>{currentCourse?.totalChapter} chương</h6>
                     </div>
                   </div>
                   <div className="responsive-stack">
@@ -275,142 +216,72 @@ export default function CourseDetail() {
               </div>
             </div>
             <div className="col-lg-4">
-              <div className="sidebar-sec">
-                <div className="video-sec vid-bg">
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="video-details">
-                        <div className="course-fee">
-                          <img src={currentCourse?.image} alt="" />
-                          <h2>FREE</h2>
-                        </div>
-                        <div className="row gx-2">
-                          <div className="col-md-6">
-                            <a
-                              href="course-wishlist.html"
-                              className="btn btn-wish w-100"
-                            >
-                              <i className="feather-heart" /> Add to Wishlist
-                            </a>
-                          </div>
-                          <div className="col-md-6">
-                            <a
-                              href="javascript:void(0);"
-                              className="btn btn-wish w-100"
-                            >
-                              <i className="feather-share-2" /> Share
-                            </a>
-                          </div>
-                        </div>
-                        <div
-                          className="btn btn-enroll w-100"
-                          onClick={learningCourse}
-                        >
-                          Học ngay
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="card include-sec">
-                  <div className="card-body">
-                    <div className="cat-title">
-                      <h4>Includes</h4>
-                    </div>
-                    <ul>
-                      <li>
-                        <img
-                          src="assets/img/icon/import.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        11 hours on-demand video
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/play.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        69 downloadable resources
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/key.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Full lifetime access
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/mobile.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Access on mobile and TV
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/cloud.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Assignments
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/teacher.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Certificate of Completion
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+
+
                 <div className="card feature-sec">
-                  <div className="card-body">
-                    <div className="cat-title">
-                      <h4>Includes</h4>
+                    <div className="card-body">
+                        <div className="cat-title">
+                            <h4>Bao gồm</h4>
+                        </div>
+                        <ul>
+                            <li>
+                                <img
+                                    src="assets/img/icon/timer.svg"
+                                    className="me-2"
+                                    alt=""
+                                />
+                                Bài học: <span>{currentCourse?.totalLesson}</span>
+                            </li>
+                            <li>
+                                <img
+                                    src="assets/img/icon/chapter.svg"
+                                    className="me-2"
+                                    alt=""
+                                />
+                                Chương học: <span>{currentCourse?.totalChapter}</span>
+                            </li>
+                            <li>
+                                <img
+                                    src="assets/img/icon/video.svg"
+                                    className="me-2"
+                                    alt=""
+                                />
+                                Học viên:<span> {currentCourse?.totalUser}</span>
+                            </li>
+                            <li>
+                                <img
+                                    src="assets/img/icon/chart.svg"
+                                    className="me-2"
+                                    alt=""
+                                />
+                                Số lượt yêu thích: <span>{currentCourse?.totalFavourite}</span>
+                            </li>
+                        </ul>
                     </div>
-                    <ul>
-                      <li>
-                        <img
-                          src="assets/img/icon/timer.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Thời gian: <span>20 tiếng</span>
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/chapter.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Chương học: <span>{chapters?.length || 15}</span>
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/video.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Video:<span> 12 tiếng</span>
-                      </li>
-                      <li>
-                        <img
-                          src="assets/img/icon/chart.svg"
-                          className="me-2"
-                          alt=""
-                        />
-                        Level: <span>Beginner</span>
-                      </li>
-                    </ul>
-                  </div>
+                    <div>
+                        <div>
+                            <div className="video-sec vid-bg">
+                                <div className="card">
+                                    <div className="card-body">
+                                        <div className="video-details">
+                                            <div className="course-fee">
+                                                <img src={currentCourse?.image} alt="" />
+                                            </div>
+                                            <div
+                                                className="btn btn-enroll w-100"
+                                                onClick={learningCourse}
+                                            >
+                                                Học ngay
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
           </div>
         </div>
