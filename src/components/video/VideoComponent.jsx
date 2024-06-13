@@ -1,18 +1,15 @@
 import React from "react";
 
 export default function VideoComponent({ sourceVideo }) {
-  return (
-    <div className="w-full h-full">
-      {" "}
-      <iframe
-        width="100%"
-        height="610px"
-        src={sourceVideo}
-        title="Video"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-        style={{ border: 0 }}
-      ></iframe>
-    </div>
-  );
+    return (
+        <div className="w-full h-full">
+            <video
+                src={sourceVideo}
+                controls
+                style={{ width: "100%", height: "610px", border: 0 }}
+            >
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    );
 }

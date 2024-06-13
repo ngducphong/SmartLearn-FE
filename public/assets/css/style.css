@@ -12351,7 +12351,7 @@ input[type="password"]::-ms-clear {
   background: 0 0;
 }
 .subs-title {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   color: #392c7d;
   margin-bottom: 20px;
@@ -12361,7 +12361,7 @@ input[type="password"]::-ms-clear {
 }
 .overview-sec h6 {
   font-weight: 600;
-  font-size: 14px;
+  font-size: 18px;
   color: #0b0b0b;
   margin-bottom: 20px;
 }

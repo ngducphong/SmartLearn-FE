@@ -23,6 +23,7 @@ import Cookies from "js-cookie";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import { getOneCourses } from "../../../api/courseAPIs";
+import DateCommponent from "../../../components/date/DateCommponent.jsx";
 const LearningCourse = () => {
   const chapters = useSelector((state) => state.chapterSlice.chapters);
   const lesson = useSelector((state) => state.lessonSlice.lesson);
@@ -31,6 +32,10 @@ const LearningCourse = () => {
   const [description, setDescription] = useState("");
   const [sourceVideo, setSourceVideo] = useState("");
   const [selectedLessonId, setSelectedLessonId] = useState(null);
+  const [titleLesson, setTitleLesson] = useState("");
+  const [resourcesLesson, setResourcesLesson] = useState("");
+  const [documentLesson, setDocumentLesson] = useState("");
+  const [modifyDateLesson, setModifyDateLesson] = useState();
   const [currentCourse, setCurrentCourse] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -73,6 +78,10 @@ const LearningCourse = () => {
       const firstLesson = firstChapter.lessons[0];
       setSourceVideo(firstLesson.video);
       setDescription(firstLesson.description);
+      setTitleLesson(firstLesson.title);
+      setModifyDateLesson(firstLesson.modifyDate);
+      setDocumentLesson(firstLesson.document);
+      setResourcesLesson(firstLesson.resources);
       setSelectedLessonId(firstLesson.id);
     }
   }, [lesson]);
@@ -96,6 +105,10 @@ const LearningCourse = () => {
           ];
         setSourceVideo(prevLesson.video);
         setDescription(prevLesson.description);
+        setTitleLesson(prevLesson.title);
+        setModifyDateLesson(prevLesson.modifyDate);
+        setDocumentLesson(prevLesson.document);
+        setResourcesLesson(prevLesson.resources);
         setSelectedLessonId(prevLesson.id);
       } else if (currentChapterIndex > 0) {
         // Chuyển sang chương trước nếu không còn bài học nào ở chương hiện tại
@@ -103,6 +116,10 @@ const LearningCourse = () => {
         const prevLesson = prevChapter.lessons[prevChapter.lessons.length - 1];
         setSourceVideo(prevLesson.video);
         setDescription(prevLesson.description);
+        setTitleLesson(prevLesson.title);
+        setModifyDateLesson(prevLesson.modifyDate);
+        setDocumentLesson(prevLesson.document);
+        setResourcesLesson(prevLesson.resources);
         setSelectedLessonId(prevLesson.id);
         setExpanded(`panel${prevChapter.id}`);
       }
@@ -128,6 +145,10 @@ const LearningCourse = () => {
           ];
         setSourceVideo(nextLesson.video);
         setDescription(nextLesson.description);
+        setTitleLesson(nextLesson.title);
+        setModifyDateLesson(nextLesson.modifyDate);
+        setDocumentLesson(nextLesson.document);
+        setResourcesLesson(nextLesson.resources);
         setSelectedLessonId(nextLesson.id);
       } else if (currentChapterIndex < groupedContentItems.length - 1) {
         // Chuyển sang chương tiếp theo nếu không còn bài học nào ở chương hiện tại
@@ -135,6 +156,10 @@ const LearningCourse = () => {
         const nextLesson = nextChapter.lessons[0];
         setSourceVideo(nextLesson.video);
         setDescription(nextLesson.description);
+        setTitleLesson(nextLesson.title);
+        setModifyDateLesson(nextLesson.modifyDate);
+        setDocumentLesson(nextLesson.document);
+        setResourcesLesson(nextLesson.resources);
         setSelectedLessonId(nextLesson.id);
         setExpanded(`panel${nextChapter.id}`);
       }
@@ -158,19 +183,6 @@ const LearningCourse = () => {
             </span>
           </div>
 
-          {/* <div>
-            <span className="text-white text-[14px] font-semibold ml-2">
-              Tiến độ
-            </span>
-
-            <span className="text-white text-[14px] font-semibold ml-2">
-              Tiến độ
-            </span>
-
-            <span className="text-white text-[14px] font-semibold ml-2">
-              Tiến độ
-            </span>
-          </div> */}
         </div>
         <Box
           className="shadow-lg"
@@ -191,16 +203,62 @@ const LearningCourse = () => {
                       <div className="px-4 lg:px-24 bg-black">
                         <VideoComponent sourceVideo={sourceVideo} />
                       </div>
-                      <div
-                        className="ckEditor mx-auto w-11/12 mt-10"
-                        dangerouslySetInnerHTML={{ __html: description }}
-                      />
+
+
+
+                      <div className="container">
+
+                            <div className="card overview-sec">
+                              <div className="card-body" style={{margin: "10px 70px 10px 70px"}}>
+                                <h5 className="subs-title">{titleLesson}</h5>
+                                <p style={{fontSize : "11px" ,display: "flex"}}>
+                                  <p style={{paddingRight:"3px"}}>Cập nhập: </p>
+
+                                  <DateCommponent inputDate={modifyDateLesson}/>
+
+                                  </p>
+                                <h6>{documentLesson}</h6>
+                                <div
+                                    className="ckEditor"
+                                    dangerouslySetInnerHTML={{
+                                      __html: description,
+                                    }}
+                                />
+                              </div>
+                            </div>
+                      </div>
+
+
                     </div>
                   ) : (
-                    <div
-                      className="ckEditor"
-                      dangerouslySetInnerHTML={{ __html: description }}
-                    />
+
+                      <div className="overflow-y-auto">
+
+
+                          <div className="container">
+
+                              <div className="card overview-sec">
+                                  <div className="card-body" style={{margin: "10px 70px 10px 70px"}}>
+                                      <h5 className="subs-title">{titleLesson}</h5>
+                                      <p style={{fontSize : "11px" ,display: "flex"}}>
+                                          <p style={{paddingRight:"3px"}}>Cập nhập: </p>
+
+                                          <DateCommponent inputDate={modifyDateLesson}/>
+
+                                      </p>
+                                      <h6>{documentLesson}</h6>
+                                      <div
+                                          className="ckEditor"
+                                          dangerouslySetInnerHTML={{
+                                              __html: description,
+                                          }}
+                                      />
+                                  </div>
+                              </div>
+                          </div>
+
+
+                      </div>
                   )}
                 </Box>
                 <Stack className="w-full lg:w-1/5 max-h-screen overflow-y-auto">
@@ -244,6 +302,10 @@ const LearningCourse = () => {
                                         setSourceVideo(item.video);
                                         setSelectedLessonId(item.id);
                                         setDescription(item.description);
+                                        setTitleLesson(item.title);
+                                        setModifyDateLesson(item.modifyDate);
+                                        setDocumentLesson(item.document);
+                                        setResourcesLesson(item.resources);
                                       }}
                                       className="flex justify-between items-center cursor-pointer px-4 py-2"
                                     >
