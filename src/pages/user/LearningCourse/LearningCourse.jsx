@@ -24,10 +24,15 @@ import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import { getOneCourses } from "../../../api/courseAPIs";
 import DateCommponent from "../../../components/date/DateCommponent.jsx";
+import AddCommentIcon from '@mui/icons-material/AddComment';
+import FormAddComment from "../../../components/form/FormAddComment.jsx";
+import {CommentOutlined} from "@ant-design/icons";
+
 const LearningCourse = () => {
   const chapters = useSelector((state) => state.chapterSlice.chapters);
   const lesson = useSelector((state) => state.lessonSlice.lesson);
   const isLoading = useSelector((state) => state.chapterSlice.loading);
+  const [isShowComment, setIsShowComment] = useState(false);
   const [expanded, setExpanded] = useState("");
   const [description, setDescription] = useState("");
   const [sourceVideo, setSourceVideo] = useState("");
@@ -63,6 +68,9 @@ const LearningCourse = () => {
   const handleGetDataCourse = async () => {
     const courseInfo = await getOneCourses(id);
     setCurrentCourse(courseInfo);
+  };
+  const closedComment = () => {
+    setIsShowComment(false);
   };
   // Nhóm dữ liệu lại
   const groupedContentItems = chapters?.map((chapter) => {
@@ -204,8 +212,12 @@ const LearningCourse = () => {
                         <VideoComponent sourceVideo={sourceVideo} />
                       </div>
 
+                      <button className="fixed-button" onClick={() => setIsShowComment(true)}>
+                        <CommentOutlined style={{paddingRight:"6px"}}/>
+                        Bình luận
 
-
+                      </button>
+                      {isShowComment && <FormAddComment closeForm={closedComment} lessonId={selectedLessonId}/>}
                       <div className="container">
 
                             <div className="card overview-sec">
@@ -236,6 +248,12 @@ const LearningCourse = () => {
 
 
                           <div className="container">
+                            <button className="fixed-button" onClick={() => setIsShowComment(true)}>
+                              <CommentOutlined style={{paddingRight:"6px"}}/>
+                              Bình luận
+
+                            </button>
+                            {isShowComment && <FormAddComment closeForm={closedComment} lessonId={selectedLessonId}/>}
 
                               <div className="card overview-sec">
                                   <div className="card-body" style={{margin: "10px 70px 10px 70px"}}>
@@ -378,7 +396,9 @@ const LearningCourse = () => {
               />
             </div>
           </div>
+
         </div>
+
       </Box>
     </div>
   );

@@ -25385,3 +25385,38 @@ input[type="password"]::-ms-clear {
 #video-container .download-button {
   display: none;
 }
+
+
+.fixed-button {
+  position: fixed; /* Cố định nút ở vị trí */
+  bottom: 60px; /* Cách đáy 20px */
+  right: 400px; /* Cách phải 20px */
+  background-color: #ef734b; /* Màu nền */
+  color: white; /* Màu chữ */
+  border: none; /* Bỏ viền */
+  padding: 10px 20px; /* Khoảng cách bên trong */
+  border-radius: 50px; /* Bo góc */
+  cursor: pointer; /* Con trỏ chuột khi hover */
+  font-size: 16px; /* Kích thước chữ */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+  z-index: 1000; /* Đảm bảo nút luôn trên cùng */
+}
+
+.fixed-button:hover {
+  background-color: #f53b01; /* Màu nền khi hover */
+}
+
+.scrollable-content {
+  height: 90%; /* Chiều cao cố định */
+  overflow-y: scroll; /* Thêm thanh cuộn dọc */
+  border: 1px solid #ccc; /* Đường viền để dễ thấy */
+  padding: 20px; /* Khoảng cách bên trong */
+}
+
+.testCss{
+  height: 9px !important;
+}
+
+.replyBox{
+  display: none;
+}

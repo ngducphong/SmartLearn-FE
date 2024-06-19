@@ -4,7 +4,8 @@ import "./index.css";
 import Cookies from "js-cookie";
 import axios from "axios";
 import "highlight.js/styles/github.css";
-function CKEditorComponent({ getValue, oldValue }) {
+
+function CKEditorComponent({ getValue, oldValue, className }) {
   const [editor, setEditor] = useState(null);
   const [value, setValue] = useState("");
   const getAuthToken = () => Cookies.get("accessToken");
@@ -19,36 +20,38 @@ function CKEditorComponent({ getValue, oldValue }) {
             const formData = new FormData();
             formData.append("file", file);
             axios
-              .post(
-                `${import.meta.env.VITE_API_URL}/api/v1/file/upload-file`,
-                formData,
-                {
-                  headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              )
-              .then((response) => {
-                console.log(response);
-                resolve({
-                  default: response.data,
+                .post(
+                    `${import.meta.env.VITE_API_URL}/api/v1/file/upload-file`,
+                    formData,
+                    {
+                      headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                )
+                .then((response) => {
+                  console.log(response);
+                  resolve({
+                    default: response.data,
+                  });
+                })
+                .catch((error) => {
+                  console.log(error);
+                  reject(error);
                 });
-              })
-              .catch((error) => {
-                console.log(error);
-                reject(error);
-              });
           });
         });
       },
     };
   }
+
   function uploadPlugins(editor) {
     editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
       return uploadAdapter(loader);
     };
   }
+
   useEffect(() => {
     let editorInstance = null;
 
@@ -302,13 +305,15 @@ function CKEditorComponent({ getValue, oldValue }) {
   }, []);
 
   return (
-    <div
-      style={{
-        color: "black !important",
-      }}
-    >
-      <div id="editor" ref={(ref) => setEditor(ref)}></div>
-    </div>
+      <div
+          // className={className}
+          style={{
+            color: "black !important",
+          }}
+      >
+        <div  className={className} id="editor" ref={(ref) => setEditor(ref)}></div>
+      </div>
   );
 }
+
 export default memo(CKEditorComponent);

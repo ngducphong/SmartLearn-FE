@@ -65,6 +65,17 @@ export const getCourseFavourite = async (page, size) => {
     }
 };
 
+export const checkRegisterCourse = async (id) => {
+    try {
+        const response = await jsonAxios.get(
+            `/api/v1/course/check-register-course/${id}`
+        );
+        return response.data;
+    } catch (error) {
+        notify("error", "Có lỗi xảy ra khi lấy call api checkRegisterCourse");
+    }
+};
+
 export const getOneCourses = async (id) => {
     try {
         const response = await jsonAxios.get(`/api/v1/course/${id}`);

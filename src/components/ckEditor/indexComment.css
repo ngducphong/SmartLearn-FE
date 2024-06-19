@@ -1,0 +1,50 @@
+.ck-powered-by-balloon {
+  display: none !important;
+}
+.hljs {
+  background-color: black;
+}
+
+/* index.css */
+
+.editor-wrapper {
+  /*border: 1px solid #007bff;*/
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.ck-editor__editable_inline {
+  max-height: 60px;
+  max-width: 1100px;
+  min-height: 60px;
+  min-width: 1100px;
+  border: none;
+  outline: none;
+}
+
+.ck-toolbar {
+  border: none;
+  padding: 0;
+}
+
+.ck-toolbar__items {
+  display: flex;
+  gap: 5px;
+}
+
+.ck-toolbar button {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 16px;
+}
+
+.ck-toolbar button:hover {
+  color: #000;
+}
+
+.ck-placeholder {
+  color: #6c757d !important;
+}
