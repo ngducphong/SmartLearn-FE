@@ -6,13 +6,16 @@ import axios from "axios";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CKEditorComponent from "../ckEditor/CkEditorComponent.jsx";
 import CryptoJS from 'crypto-js';
+import {CommentOutlined} from "@ant-design/icons";
+import FormAddComment from "./FormAddComment.jsx";
 
 export default function FormAddLesson({closeForm, handleOk, editLesson}) {
     const [title, setTitle] = useState(editLesson?.title || "");
     const [description, setDescription] = useState(editLesson?.description || "");
     const [document, setDocument] = useState(editLesson?.document || "");
     const [source, setSource] = useState(editLesson?.resources || "");
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const [isShowComment, setIsShowComment] = useState(false);
     // const [description2, setDescription2] = useState(null);
 
     const decrypt = (data, key) => {
@@ -50,6 +53,9 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
     function handleGetValue(value) {
         setDescription(value);
     }
+    const closedComment = () => {
+        setIsShowComment(false);
+    };
 
     const formRef = useRef(null);
     const handleClickOutside = (event) => {
@@ -71,7 +77,7 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
                     <div className="overlay" onClick={handleClickOutside}>
                         <form
                             ref={formRef}
-                            className="fade-down bg-white w-[50%] px-[24px] py-[20px] rounded"
+                            className="fade-down bg-white w-[77%] px-[24px] py-[20px] rounded"
                         >
                             <div className="flex justify-between items-center">
                                 <h3 className="text-[20px] font-semibold">Sửa bài học</h3>
@@ -83,7 +89,7 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
 
                             <div className="flex"
                             >
-                                <div className="w-1/2 pr-5">
+                                <div className="w-11/12 pr-5">
                                     <div className="grid grid-cols-1 gap-5 mt-3">
                                         <div>
                                             <label htmlFor="">Tên bài học</label>
@@ -114,6 +120,7 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
                                             />
                                         </div>
                                     </div>
+
                                     <div className="grid grid-cols-1 gap-5 mt-3">
                                         <div>
                                             <label htmlFor="courseVideo">
@@ -142,18 +149,15 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
                                             )}
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-1/2">
-
                                     <div className="">
                                         <CKEditorComponent
                                             getValue={handleGetValue}
                                             oldValue={description}
                                         />
                                     </div>
-
                                 </div>
                             </div>
+
 
                             <Divider/>
                             <div className="flex justify-end gap-2">
@@ -180,6 +184,8 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
                                 >
                                     {isLoading ? <Spin/> : "Lưu"}
                                 </Button>
+                                <Button type="primary" danger onClick={() => setIsShowComment(true)} style={{color:"#333"}}>Quản lý bình luận<CommentOutlined style={{paddingRight:"6px"}}/></Button>
+                                {isShowComment && <FormAddComment closeForm={closedComment} lessonId={editLesson?.id} isAdmin={true}/>}
                             </div>
                         </form>
                     </div>
@@ -189,7 +195,7 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
                     <div className="overlay" onClick={handleClickOutside}>
                         <form
                             ref={formRef}
-                            className="fade-down bg-white w-[50%] px-[24px] py-[20px] rounded"
+                            className="fade-down bg-white w-[77%] px-[24px] py-[20px] rounded"
                         >
                             <div className="flex justify-between items-center">
                                 <h3 className="text-[20px] font-semibold">Thêm mới bài học</h3>
@@ -201,7 +207,7 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
 
                             <div className="flex"
                             >
-                                <div className="w-1/2 pr-5">
+                                <div className="w-11/12 pr-5">
                                     <div className="grid grid-cols-1 gap-5 mt-3">
                                         <div>
                                             <label htmlFor="">Tên bài học</label>
@@ -260,17 +266,14 @@ export default function FormAddLesson({closeForm, handleOk, editLesson}) {
                                             )}
                                         </div>
                                     </div>
-                                </div>
-                                <div className="w-1/2">
-
                                     <div className="">
                                         <CKEditorComponent
                                             getValue={handleGetValue}
                                             oldValue={description}
                                         />
                                     </div>
-
                                 </div>
+
                             </div>
 
 

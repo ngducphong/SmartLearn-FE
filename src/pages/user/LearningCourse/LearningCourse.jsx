@@ -217,7 +217,7 @@ const LearningCourse = () => {
                         Bình luận
 
                       </button>
-                      {isShowComment && <FormAddComment closeForm={closedComment} lessonId={selectedLessonId}/>}
+                      {isShowComment && <FormAddComment closeForm={closedComment} lessonId={selectedLessonId} isAdmin={false}/>}
                       <div className="container">
 
                             <div className="card overview-sec">
@@ -253,7 +253,7 @@ const LearningCourse = () => {
                               Bình luận
 
                             </button>
-                            {isShowComment && <FormAddComment closeForm={closedComment} lessonId={selectedLessonId}/>}
+                            {isShowComment && <FormAddComment closeForm={closedComment} lessonId={selectedLessonId} isAdmin={false}/>}
 
                               <div className="card overview-sec">
                                   <div className="card-body" style={{margin: "10px 70px 10px 70px"}}>

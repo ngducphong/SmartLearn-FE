@@ -3,12 +3,17 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Button, Input } from "antd";
 import "react-quill/dist/quill.snow.css";
 import "./index.css";
-import { addNewComment, getCommentChildrenByParentId, listCommentByLesson } from "../../api/commentAPIs.js";
+import {
+    addNewComment,
+    deleteComment,
+    getCommentChildrenByParentId,
+    listCommentByLesson
+} from "../../api/commentAPIs.js";
 import CKEditorComment from "../ckEditor/CkEditorComment.jsx";
 import { UserOutlined } from "@ant-design/icons";
 import DateCommponent from "../date/DateCommponent.jsx";
 
-export default function FormAddComment({ closeForm, lessonId }) {
+export default function FormAddComment({ closeForm, lessonId, isAdmin }) {
     const [commentList, setCommentList] = useState([]);
     const formRef = useRef(null);
     const [content, setContent] = useState("");
@@ -51,7 +56,25 @@ export default function FormAddComment({ closeForm, lessonId }) {
             replyBox.style.display = "block";
         }
     };
+    const handleDelete = async (id) => {
+        await deleteComment(id);
+        setCommentList((prev) => prev.filter((comment) => comment.id !== id));
+    };
 
+    const handleDeleteChild = async (parentId, childId) => {
+        await deleteComment(childId);
+        setChildComments((prev) => ({
+            ...prev,
+            [parentId]: prev[parentId].filter((child) => child.id !== childId),
+        }));
+        setCommentList((prev) =>
+            prev.map((comment) =>
+                comment.id === parentId
+                    ? { ...comment, totalCommentChild: comment.totalCommentChild - 1 }
+                    : comment
+            )
+        );
+    };
     const handleGetCommentChild = (replyBoxId, parentId) => {
         const replyBox = document.getElementById(replyBoxId);
         setContentChild("");
@@ -166,6 +189,14 @@ export default function FormAddComment({ closeForm, lessonId }) {
                                     }}
                                 />
                                 <div>
+                                    {isAdmin && <Button
+                                        type="primary"
+                                        danger
+                                        style={{marginTop: "15px"}}
+                                        onClick={() => handleDelete(comment.id)}
+                                    >
+                                        Xoá
+                                    </Button>}
                                     <Button
                                         type="link"
                                         style={{ marginTop: "15px" }}
@@ -256,6 +287,14 @@ export default function FormAddComment({ closeForm, lessonId }) {
                                                         __html: commentChild.content,
                                                     }}
                                                 />
+                                                {isAdmin && <Button
+                                                    type="primary"
+                                                    danger
+                                                    style={{marginTop: "15px"}}
+                                                    onClick={() => handleDeleteChild(comment.id)}
+                                                >
+                                                    Xoá
+                                                </Button>}
                                             </div>
                                         ))}
                                     </div>
