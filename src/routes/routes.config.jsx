@@ -14,6 +14,7 @@ import LearningCourse from "../pages/user/LearningCourse/LearningCourse";
 import AllCourses from "../pages/user/AllCourses/AllCourses";
 import NotFound from "../pages/notfound/NotFound";
 import PayMentCourse from "../pages/user/PayMent/PayMentCourse.jsx";
+import ChangePassword from "../components/User/ChangePassword.jsx";
 const routesConfig = [
   {
     path: "/admin",
@@ -25,6 +26,7 @@ const routesConfig = [
       { path: "post", element: <PostManagement /> },
       { path: "user", element: <UserMangagement /> },
       { path: "course/:id", element: <DetailCourse /> },
+      { path: "change-password", element: <ChangePassword /> },
     ],
   },
   {
@@ -40,7 +42,8 @@ const routesConfig = [
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/course/learn/:id", element: <LearningCourse /> },
-  { path: "*", element: <NotFound /> },
+  { path: "*", element: <NotFound /> },,
+  { path: "/change-password", element: <ChangePassword /> },
 ];
 
 export default routesConfig;

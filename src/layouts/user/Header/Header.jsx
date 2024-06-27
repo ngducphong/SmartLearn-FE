@@ -6,6 +6,11 @@ import { getAllCoursesAPI } from "../../../redux/reducer/courseSlice";
 import {getMyCourses, getOneCourses} from "../../../api/courseAPIs.js";
 import {getChaptersThunk} from "../../../redux/reducer/chapterSlice.js";
 import {getLessonsThunk} from "../../../redux/reducer/lessonSlice.js";
+import {Dropdown, Space} from "antd";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import PersonIcon from "@mui/icons-material/Person";
+import KeyIcon from "@mui/icons-material/Key";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function Header() {
   //#region redux
@@ -17,7 +22,6 @@ export default function Header() {
     const savedUser = localStorage.getItem("user");
     return savedUser || null;
   });
-
 
 
   useEffect(() => {
@@ -37,6 +41,55 @@ export default function Header() {
     setUser(null);
     navigate("/");
   };
+
+  const logout = () => {
+    // Xóa accessToken từ cookies
+    Cookies.remove("accessToken");
+
+    // Xóa dữ liệu người dùng từ localStorage
+    localStorage.clear();
+
+    // Chuyển hướng người dùng về  trang chủ
+    window.location.href = "/";
+  };
+
+  const items = [
+    {
+      label: (
+          <div className="flex items-center gap-2">
+            <PersonIcon className="h-4 w-4" />
+            <span>Thông tin cá nhân</span>
+          </div>
+      ),
+      key: "0",
+    },
+    {
+      label: (
+          <Link to={'/change-password'}>
+          <div className="flex items-center gap-2">
+
+              <KeyIcon />
+
+              <span>Đổi mật khẩu</span>
+
+          </div>
+          </Link>
+      ),
+      key: "1",
+    },
+    {
+      label: (
+          <div className="flex items-center gap-2"
+               onClick={logout}
+          >
+            <LogoutIcon />
+            <span>Đăng xuất</span>
+          </div>
+      ),
+      key: "3",
+    },
+  ];
+
   return (
     <header className="header">
       <div className="header-fixed">
@@ -127,16 +180,40 @@ export default function Header() {
               {user ? (
                 <>
                   <li className="nav-item">
-                    <a className="nav-link cursor-pointer">Xin chào, {user}</a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link header-login cursor-pointer"
-                      onClick={handleLogout}
+                    <Dropdown
+                        className="nav-link header-login cursor-pointer"
+                        menu={{
+                          items,
+                        }}
+                        trigger={["click"]}
                     >
-                      Đăng xuất
-                    </a>
+                      <a onClick={(e) => e.preventDefault()}>
+                        <Space>
+                          <div className="flex items-center">
+                            <div style={{paddingRight:"10px"}}>
+                              Xin chào, {user}
+                            </div>
+
+                            <img
+                                className="h-8 w-8 rounded-full border"
+                                src="https://tse1.mm.bing.net/th?id=OIP.0siT9Vkwx8tb_kFTi-KV1wHaHa&pid=Api&P=0&h=180"
+                                alt="Ảnh đại diện"
+                            />
+
+                            <KeyboardArrowDownIcon className="text-[#65696E] cursor-pointer hover:text-[#5d6064]" />
+                          </div>
+                        </Space>
+                      </a>
+                    </Dropdown>
                   </li>
+                  {/*<li className="nav-item">*/}
+                  {/*  <a*/}
+                  {/*    className="nav-link header-login cursor-pointer"*/}
+                  {/*    onClick={handleLogout}*/}
+                  {/*  >*/}
+                  {/*    Đăng xuất*/}
+                  {/*  </a>*/}
+                  {/*</li>*/}
                 </>
               ) : (
                 <>

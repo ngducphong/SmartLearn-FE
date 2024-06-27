@@ -26,7 +26,9 @@ import { getOneCourses } from "../../../api/courseAPIs";
 import DateCommponent from "../../../components/date/DateCommponent.jsx";
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import FormAddComment from "../../../components/form/FormAddComment.jsx";
-import {CommentOutlined} from "@ant-design/icons";
+import {CommentOutlined, OpenAIOutlined} from "@ant-design/icons";
+import {Button} from "antd";
+import ChatApp from "../../../components/chat/ChatApp.jsx";
 
 const LearningCourse = () => {
   const chapters = useSelector((state) => state.chapterSlice.chapters);
@@ -44,6 +46,13 @@ const LearningCourse = () => {
   const [currentCourse, setCurrentCourse] = useState(null);
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const [showFormChatApp, setShowFormChatApp] = useState(false);
+
+  const closeFormChatApp = () => {
+    setShowFormChatApp(false);
+  };
+
   const dispatch = useDispatch();
   useEffect(() => {
     const getAuthToken = () => Cookies.get("accessToken");
@@ -206,6 +215,18 @@ const LearningCourse = () => {
                   className="w-full lg:flex-1 overflow-auto"
                   style={{ height: "calc(100vh - 50px)" }}
                 >
+                  <Button type="primary" shape="circle" className="fixed-button-chat" onClick={() => setShowFormChatApp(true)}>
+                    <div style={{display:"flex" ,flexDirection: "column", alignItems: "center"}}>
+
+                      <OpenAIOutlined style={{fontSize:"20px"}}/>
+                      <span>Hỏi đáp AI</span>
+                    </div>
+
+                  </Button>
+                  {
+                      showFormChatApp
+                      && <ChatApp closeForm={closeFormChatApp}/>}
+
                   {sourceVideo ? (
                     <div className="overflow-y-auto">
                       <div className="px-4 lg:px-24 bg-black">

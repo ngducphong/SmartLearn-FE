@@ -94,3 +94,21 @@ export const editUserApi = async (userData) => {
         }
     }
 };
+
+export const changePassword = async (changePasswordRequest) => {
+    try {
+        await jsonAxios.put(
+            "/api/v1/user/change-password",
+            changePasswordRequest
+        );
+        notify("success", "Đổi mật khẩu thành công");
+    } catch (error) {
+        if (error.response.status === 401) {
+            notify("error", "Bạn không có quyền");
+        } else if (error.response.status === 400) {
+            notify("error", error.response.data);
+        } else {
+            notify("error", "Có lỗi xảy ra khi đổi mật khẩu");
+        }
+    }
+};

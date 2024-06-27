@@ -2,12 +2,21 @@ import React, { useState } from "react";
 import { loginApi } from "../../../api/userAPIs";
 import Cookies from "js-cookie";
 import { notify } from "../../../utils/notification";
+import FormAddCategory from "../../../components/form/FormAddCategory.jsx";
+import FormForgotPassword from "../../../components/form/FormForgotPassword.jsx";
+import {Button} from "antd";
+import {editCategory} from "../../../api/categoryAPIs.js";
+import {resetPassword} from "../../../api/resetPasswordAPIs.js";
 
 export default function Login() {
   // region state
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLogining, setIsLogining] = useState(false);
+  const [isFormForgotPassword, setIsFormForgotPassword] = useState(false);
+  const closedFormForgotPassword = () => {
+    setIsFormForgotPassword(false);
+  };
   // end region
   // Hàm đăng nhập
   const login = async () => {
@@ -41,6 +50,8 @@ export default function Login() {
       setIsLogining(false);
     }
   };
+
+
   // Gọi hàm đăng nhập khi nhấn phím Enter
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
@@ -109,14 +120,30 @@ export default function Login() {
                       <span className="feather-eye toggle-password" />
                     </div>
                   </div>
-                  <div className="forgot">
-                    <span>
+                  <div className="forgot" style={{display:"inline-block"}}>
+                    <span  style={{display:"block"}}>
                       <a className="forgot-link" href="/register">
                         Bạn chưa có tài khoản ?{" "}
                         <span className="text-rikkei">Tạo tài khoản</span>
                       </a>
                     </span>
+
+                    <span  style={{display:"block"}}>
+                      <Button type="link"  onClick={() => setIsFormForgotPassword(true)} style={{paddingLeft:"0px"}}>
+                        <span className="text-rikkei">Quên mật khẩu ?</span>
+                      </Button>
+                    </span>
+
+                    {
+                      isFormForgotPassword
+                        && (
+                        <FormForgotPassword
+                            closeForm={closedFormForgotPassword}
+                        />
+                    )}
+
                   </div>
+
 
                   <div className="d-grid">
                     <button

@@ -25420,3 +25420,140 @@ input[type="password"]::-ms-clear {
 .replyBox{
   display: none;
 }
+
+.input-error {
+  border: 1px solid red;
+}
+
+
+/*.App {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*  height: 100vh;*/
+/*  background-color: #f0f0f0;*/
+/*}*/
+
+.chat-app {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  max-height: 400px;
+  min-height: 400px;
+  overflow-y: auto;
+  z-index: 90001;
+  display: flex;
+  flex-direction: column;
+}
+
+/*.messages-list {*/
+/*  flex: 1;*/
+/*  margin-bottom: 20px;*/
+/*  max-height: 300px;*/
+/*  overflow-y: auto;*/
+/*  flex-direction: column;*/
+/*}*/
+
+.message {
+  background: #e0e0e0;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.chat-form {
+  display: flex;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px 0 0 5px;
+  box-sizing: border-box;
+}
+
+.send-button {
+  padding: 10px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background: #0056b3;
+}
+
+
+.message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 70%; /* Điều chỉnh chiều rộng tối đa của tin nhắn */
+}
+
+/*.sent-message {*/
+/*  background-color: #DCF8C6; !* Màu nền cho tin nhắn gửi *!*/
+/*  align-self: flex-end; !* Đẩy tin nhắn gửi sang bên phải *!*/
+/*}*/
+
+/*.received-message {*/
+/*  background-color: #E2E2E2; !* Màu nền cho tin nhắn nhận *!*/
+/*  align-self: flex-start; !* Đẩy tin nhắn nhận sang bên trái *!*/
+/*}*/
+
+.messages-list {
+  display: flex; /* Sử dụng flexbox */
+  flex-direction: column; /* Đảm bảo các phần tử con xếp theo cột */
+  flex: 1;
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.sent-message, .received-message {
+  padding: 10px; /* Thêm khoảng cách bên trong */
+  border-radius: 5px; /* Bo tròn các góc */
+  margin: 5px 0; /* Khoảng cách giữa các tin nhắn */
+  word-wrap: break-word; /* Đảm bảo chữ dài sẽ tự xuống dòng */
+  word-break: break-word; /* Đảm bảo chữ dài sẽ tự xuống dòng */
+  white-space: normal; /* Đảm bảo chữ dài sẽ tự xuống dòng */
+}
+
+.sent-message {
+  background-color: #DCF8C6; /* Màu nền cho tin nhắn gửi */
+  align-self: flex-end; /* Đẩy tin nhắn gửi sang bên phải */
+}
+
+.received-message {
+  background-color: #E2E2E2; /* Màu nền cho tin nhắn nhận */
+  align-self: flex-start; /* Đẩy tin nhắn nhận sang bên trái */
+}
+
+.fixed-button-chat {
+  width: 70px;
+  height: 70px;
+  position: fixed; /* Cố định nút ở vị trí */
+  bottom: 80px; /* Cách đáy 20px */
+  right: 50px; /* Cách phải 20px */
+  background-color: #ec0d0d; /* Màu nền */
+  color: #ffffff; /* Màu chữ */
+  border: none; /* Bỏ viền */
+  padding: 10px 20px; /* Khoảng cách bên trong */
+  border-radius: 40px; /* Bo góc */
+  cursor: pointer; /* Con trỏ chuột khi hover */
+  font-size: 12px; /* Kích thước chữ */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+  z-index: 90000 !important; /* Đảm bảo nút luôn trên cùng */
+}
+
+.fixed-button-chat:hover {
+  background-color: #f53b01; /* Màu nền khi hover */
+}
