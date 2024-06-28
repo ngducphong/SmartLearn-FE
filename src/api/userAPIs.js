@@ -112,3 +112,39 @@ export const changePassword = async (changePasswordRequest) => {
         }
     }
 };
+
+export const getUserAccountRegistrationData = async (year) => {
+    try {
+        year = year||2024
+        const response = await jsonAxios.get(
+            `/api/v1/user/get-user-account-registration-data?year=${year}`
+        );
+        return response.data;
+    } catch (error) {
+        if (error.response.status === 401) {
+            notify("error", "Bạn không có quyền");
+        } else if (error.response.status === 400) {
+            notify("error", error.response.data);
+        } else {
+            notify("error", "Có lỗi xảy ra khi getUserAccountRegistrationData");
+        }
+    }
+};
+
+export const getPaymentChartData = async (year) => {
+    try {
+        year = year||2024
+        const response = await jsonAxios.get(
+            `/api/v1/user/get-payment-chart-data?year=${year}`
+        );
+        return response.data;
+    } catch (error) {
+        if (error.response.status === 401) {
+            notify("error", "Bạn không có quyền");
+        } else if (error.response.status === 400) {
+            notify("error", error.response.data);
+        } else {
+            notify("error", "Có lỗi xảy ra khi getPaymentChartData");
+        }
+    }
+};
