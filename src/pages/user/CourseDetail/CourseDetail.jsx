@@ -12,9 +12,16 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {getChaptersThunk} from "../../../redux/reducer/chapterSlice";
 import {getLessonsThunk} from "../../../redux/reducer/lessonSlice";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-import {checkRegisterCourse, getFullCourse, getOneCourses} from "../../../api/courseAPIs";
+import {
+    checkRegisterCourse,
+    getFullCourse,
+    getOneCourses,
+    recommendCourseByMyCourse,
+    recommendCourseDtoById
+} from "../../../api/courseAPIs";
 import {notify} from "../../../utils/notification";
 import Cookies from "js-cookie";
+import CategoryCard from "../../../components/CategoryCard/CategoryCard.jsx";
 
 export default function CourseDetail() {
     const chapters = useSelector((state) => state.chapterSlice.chapters);
@@ -24,6 +31,7 @@ export default function CourseDetail() {
     const [isRegisterCourse, setIsRegisterCourse] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [category, setCategory] = useState([])
     const {id} = useParams();
     const handleGetDataCourse = async () => {
         const courseInfo = await getFullCourse(id);
@@ -59,6 +67,13 @@ export default function CourseDetail() {
             navigate(`/payMentCourse/${id}`);
         }
     };
+    const getRecommendCourseDtoById = async () => {
+        const data = await recommendCourseDtoById(id);
+        setCategory(data);
+    }
+    useEffect(() => {
+        getRecommendCourseDtoById();
+    }, []);
     return (
         <div className="mt-[100px]">
             <div className="breadcrumb-bar">
@@ -133,99 +148,21 @@ export default function CourseDetail() {
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="col-sm-6">
-                                            <h5 className="subs-title">Course Content</h5>
+                                            <h5 className="subs-title">Các khoá học tương tự</h5>
                                         </div>
-                                        <div className="col-sm-6 text-sm-end">
-                                            <h6>{currentCourse?.totalChapter} chương</h6>
+                                        <div
+                                            className="owl-carousel mentoring-course owl-theme aos"
+                                            data-aos="fade-up"
+                                            style={{margin:"0px"}}
+                                        >
+                                        {category?.map((item, index) => (
+                                            <Fragment key={index}>
+                                                <CategoryCard item={item}/>
+                                            </Fragment>
+                                        ))}
                                         </div>
                                     </div>
-                                    <div className="responsive-stack">
-                                        {" "}
-                                        {isLoading ? (
-                                            <Grid
-                                                item
-                                                xs={12}
-                                                style={{display: "flex", justifyContent: "center"}}
-                                            >
-                                                <CircularProgress/>
-                                            </Grid>
-                                        ) : (
-                                            <>
-                                                {groupedContentItems.length > 0 ? (
-                                                    <div className="responsive-stack">
-                                                        {" "}
-                                                        {groupedContentItems?.map((chapter) => (
-                                                            <Fragment key={chapter?.id}>
-                                                                <Accordion
-                                                                    sx={{maxHeight: "50%"}}
-                                                                    className=" font-medium text-[#170F49] responsive-stack-item"
-                                                                >
-                                                                    <AccordionSummary
-                                                                        sx={{
-                                                                            minHeight: "2rem",
-                                                                            color: "#BC2228",
-                                                                            borderRadius: "20px",
-                                                                            fontSize: "16px",
-                                                                        }}
-                                                                    >
-                                    <span className="font-bold">
-                                      {chapter?.title}
-                                    </span>
-                                                                    </AccordionSummary>
-                                                                    <div
-                                                                        className="overflow-auto max-h-64 bg-white rounded-[20px] ">
-                                                                        <Divider/>
-                                                                        {chapter?.lessons?.length > 0 ? (
-                                                                            chapter.lessons?.map((item) => (
-                                                                                <AccordionDetails
-                                                                                    sx={{
-                                                                                        height: "60px",
-                                                                                        display: "flex",
-                                                                                        justifyContent: "space-between",
-                                                                                        cursor: "pointer",
-                                                                                        alignItems: "center",
-                                                                                        fontSize: "16px",
-                                                                                        margin: "0 20px",
-                                                                                    }}
-                                                                                    key={item.id}
-                                                                                >
-                                                                                    <p
-                                                                                        className={`max-w-full mt-3 font-bold`}
-                                                                                    >
-                                                                                        {item?.title}
-                                                                                    </p>
-                                                                                    <div className="">
-                                                                                        {item?.video ? (
-                                                                                            <img
-                                                                                                src="/assets/img/Playbtn.png"
-                                                                                                alt=""
-                                                                                                className="w-5 h-5"
-                                                                                            />
-                                                                                        ) : (
-                                                                                            <MenuBookIcon
-                                                                                                className="text-rikkei"/>
-                                                                                        )}
-                                                                                    </div>
-                                                                                </AccordionDetails>
-                                                                            ))
-                                                                        ) : (
-                                                                            <div style={{padding: "12px 16px"}}>
-                                                                                Coming soon...
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </Accordion>
-                                                            </Fragment>
-                                                        ))}
-                                                    </div>
-                                                ) : (
-                                                    <>
-                                                        <h1>Coming Soon</h1>
-                                                    </>
-                                                )}
-                                            </>
-                                        )}
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

@@ -64,7 +64,7 @@ export default function Home() {
     return (
         <>
             <Banner/>
-            <TopCategory/>
+            <TopCategory user={user}/>
             <NewCourses allCourses={mostRegistered} isLoading={isLoadingNewCourses} user={user}/>
             <MasterSkill/>
             <TrendingCourse allCourses={courseFavourite} isLoading={isLoadingCourseFavourite} user={user}/>

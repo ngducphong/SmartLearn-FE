@@ -31,13 +31,35 @@ export const getMyCourses = async (page, searchValue, size) => {
                 `/api/v1/course/get-my-course?page=${page}&size=${size}&title=${searchValue}`
             );
             return response.data;
-        }else {
+        } else {
             const response = await jsonAxios.get(
                 `api/v1/course/get-my-course?page=${page}&size=${size}`
             );
             return response.data;
         }
 
+    } catch (error) {
+        notify("error", "Có lỗi xảy ra khi lấy dữ liệu getMyCourses");
+    }
+};
+
+export const recommendCourseDtoById = async (id) => {
+    try {
+        const response = await jsonAxios.get(
+            `/api/v1/course/recommend-course-by-id?id=${id}`
+        );
+        return response.data;
+    } catch (error) {
+        notify("error", "Có lỗi xảy ra khi lấy dữ liệu getMyCourses");
+    }
+};
+
+export const recommendCourseByMyCourse = async () => {
+    try {
+        const response = await jsonAxios.get(
+            `/api/v1/course/recommend-course-by-my-course`
+        );
+        return response.data;
     } catch (error) {
         notify("error", "Có lỗi xảy ra khi lấy dữ liệu getMyCourses");
     }
@@ -96,7 +118,7 @@ export const getFullCourse = async (id) => {
 export const addNewCourse = async (newCourse) => {
     let formData = new FormData();
     formData.append("title", newCourse.title);
-    newCourse.imageFile && formData.append("imageFile",  newCourse.imageFile); // Đảm bảo rằng imageFile là một đối tượng MultipartFile
+    newCourse.imageFile && formData.append("imageFile", newCourse.imageFile); // Đảm bảo rằng imageFile là một đối tượng MultipartFile
     newCourse.price && formData.append("price", newCourse.price);
     formData.append("description", newCourse.description);
     formData.append("subDescription", newCourse.subDescription);
