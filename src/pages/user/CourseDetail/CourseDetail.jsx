@@ -72,8 +72,18 @@ export default function CourseDetail() {
         setCategory(data);
     }
     useEffect(() => {
+        const isReloaded = sessionStorage.getItem('isReloaded');
         getRecommendCourseDtoById();
-    }, []);
+
+        // đoạn này sẽ phải sửa lại
+        if (!isReloaded) {
+            sessionStorage.setItem('isReloaded', 'true');
+            window.location.href = window.location.href;
+        } else {
+            sessionStorage.removeItem('isReloaded');
+            getRecommendCourseDtoById();
+        }
+    }, [id]);
     return (
         <div className="mt-[100px]">
             <div className="breadcrumb-bar">
