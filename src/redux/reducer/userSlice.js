@@ -2,8 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllUsers } from "../../api/userAPIs";
 
 export const getUsersThunk = createAsyncThunk("getUsers", async (search) => {
-  const { searchValue } = search;
-  const response = await getAllUsers(searchValue);
+  const response = await getAllUsers(search);
   return response.data;
 });
 

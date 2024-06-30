@@ -177,7 +177,9 @@ function AddUserForm({ closeForm, handleOk, editUser }) {
                           checked={selectedRoles.includes(role?.roleName)}
                           onChange={() => handleCheckboxChange(role?.roleName)}
                         />
-                        {role?.roleName}
+                        {role?.roleName === "ROLE_ADMIN" ? "Quản trị viên" :
+                            role?.roleName === "ROLE_SUBADMIN" ? "Hệ thống" :
+                                role?.roleName === "ROLE_USER" ? "Học viên" : ""}
                       </label>
                     </div>
                   ))}
@@ -267,7 +269,11 @@ function AddUserForm({ closeForm, handleOk, editUser }) {
                           checked={selectedRoles.includes(role.roleName)}
                           onChange={() => handleCheckboxChange(role.roleName)}
                         />
-                        {role.roleName}
+                        {
+                        role.roleName === "ROLE_ADMIN" ? "Quản trị viên" :
+                          role.roleName === "ROLE_SUBADMIN" ? "Hệ thống" :
+                          role.roleName === "ROLE_USER" ? "Học viên" : ""
+                        }
                       </label>
                     </div>
                   ))}

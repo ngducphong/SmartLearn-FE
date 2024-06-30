@@ -4,9 +4,19 @@ import { jsonAxios } from "./api.base.url";
 export const getPageCategory = async (page, searchValue, size) => {
   try {
     if (searchValue) {
-      const response = await jsonAxios.get(
-          `/api/v1/category/paging?page=${page}&size=${size}&name=${searchValue}`
-      );
+      let url = `/api/v1/category/paging?page=${page}&size=${size}`;
+      if (searchValue.name) {
+        url += `&name=${searchValue.name}`;
+      }
+      if (searchValue.createDate) {
+        url += `&createDate=${searchValue.createDate}`;
+      }
+      if (searchValue.voided) {
+        url += `&voided=${searchValue.voided}`;
+      }
+
+      const response = await jsonAxios.get(url);
+
       return response.data;
     } else {
       const response = await jsonAxios.get(

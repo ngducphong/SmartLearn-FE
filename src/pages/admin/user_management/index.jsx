@@ -1,17 +1,15 @@
-import {Button, Input} from "antd";
+import { Button, Input, Select, DatePicker, Form } from "antd";
 import Pagination from "@mui/material/Pagination";
-import React, {useEffect, useState} from "react";
-import CachedIcon from "@mui/icons-material/Cached";
-import {Select} from "antd";
-import {Table} from "antd";
-import {useDispatch, useSelector} from "react-redux";
-import {getUsersThunk} from "../../../redux/reducer/userSlice";
+import React, { useEffect, useState } from "react";
+import { Table } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsersThunk } from "../../../redux/reducer/userSlice";
 import FormUser from "../../../components/form/FormUser";
-import {createUser, editUserApi} from "../../../api/userAPIs";
-import useDebounce from "../../../hooks/useDebounce";
-import {CircularProgress, Grid} from "@mui/material";
+import { createUser, editUserApi } from "../../../api/userAPIs";
+import { CircularProgress, Grid } from "@mui/material";
+import { CloseOutlined, SearchOutlined } from "@ant-design/icons";
 
-export default function UserMangagement() {
+export default function UserManagement() {
     const allUsers = useSelector((state) => state.userSlice.users);
     const isLoadingThunk = useSelector((state) => state.userSlice.loading);
     const dispatch = useDispatch();
@@ -19,29 +17,47 @@ export default function UserMangagement() {
     const [currentPage, setCurrentPage] = useState(1);
     const [editUser, setEditUser] = useState(null);
     const [flag, setFlag] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [removeFilter, setRemoveFilter] = useState(false);
+    const [searchTerms, setSearchTerms] = useState({
+        username: "",
+        fullName: "",
+        phone: "",
+        email: "",
+        createDate: null,
+        role: "",
+        voided: ""
+    });
     const [isLoading, setIsLoading] = useState(false);
-    // Sử dụng useDebounce
-    const debouncedSearchTerm = useDebounce(searchTerm, 2000);
-    // Phân trang
+
     const itemsPerPage = 5;
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentUsers = allUsers.slice(indexOfFirstItem, indexOfLastItem);
     const calculateIndex = (index) => index + 1;
-    //Hàm hiển thị form thêm mới người dùng
+
     const openForm = () => {
         setShowForm(true);
     };
-    //Hàm đóng form thêm mới người dùng
+
     const closeForm = () => {
         setShowForm(false);
         setEditUser(null);
     };
+
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
     };
-    const roles = ["Admin", "User", "Guest"];
+
+    const roles = [
+        { value: "0", label: "Quản trị viên" },
+        { value: "1", label: "Hệ thống" },
+        { value: "2", label: "Học viên" }
+    ];
+
+    const statuses = [
+        { value: true, label: "Bị Khóa" },
+        { value: false, label: "Đang hoạt động" }
+    ];
 
     const columns = [
         {
@@ -51,7 +67,7 @@ export default function UserMangagement() {
             render: (_, __, index) => calculateIndex(index),
         },
         {
-            title: "Username",
+            title: "Tên tài khoản",
             dataIndex: "username",
             align: "center",
             render: (text) => <p>{text}</p>,
@@ -91,7 +107,11 @@ export default function UserMangagement() {
             render: (roles) => (
                 <div>
                     {roles.map((role, index) => (
-                        <p key={index}>{role}</p>
+                        <p key={index}>
+                            {role === "ROLE_ADMIN" ? "Quản trị viên" :
+                                role === "ROLE_SUBADMIN" ? "Hệ thống" :
+                                    role === "ROLE_USER" ? "Học viên" : ""}
+                        </p>
                     ))}
                 </div>
             ),
@@ -129,9 +149,15 @@ export default function UserMangagement() {
             },
         },
     ];
+
     useEffect(() => {
         dispatch(getUsersThunk());
     }, [flag, dispatch]);
+
+    useEffect(() => {
+        fetchUsers(searchTerms);
+    }, []);
+
     const handleSave = async (userData) => {
         if (userData.type === "add") {
             await createUser(userData);
@@ -142,37 +168,78 @@ export default function UserMangagement() {
             setFlag(!flag);
             closeForm();
         }
-        // loading lại trang
-        fetchUsers();
+        fetchUsers(searchTerms);
     };
-    // Sắp xếp theo thứ tự tăng giảm
-    // const handleSort = (value) => {
-    //     if ('lucy' === value){
-    //         getUsersThunk()
-    //     }else if ('jack' === value){
-    //         getUsersThunk()
-    //     }
-    // }
-    // Tìm kiếm người dùng
-    const handleSearch = (searchValue) => {
-        setSearchTerm(searchValue);
+
+    const handleSearch = () => {
+        setRemoveFilter(true);
+        fetchUsers(searchTerms);
     };
-    const fetchUsers = () => {
+
+    const handleRemoveFilter = () => {
+        setRemoveFilter(false);
+        setSearchTerms({
+            username: "",
+            fullName: "",
+            phone: "",
+            email: "",
+            createDate: null,
+            role: "",
+            voided: ""
+        });
+        fetchUsers({
+            username: "",
+            fullName: "",
+            phone: "",
+            email: "",
+            createDate: null,
+            role: "",
+            voided: ""
+        });
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setSearchTerms((prevTerms) => ({
+            ...prevTerms,
+            [name]: value
+        }));
+    };
+
+    const handleDateChange = (date, dateString) => {
+        setSearchTerms((prevTerms) => ({
+            ...prevTerms,
+            createDate: dateString
+        }));
+    };
+
+    const handleRoleChange = (value) => {
+        setSearchTerms((prevTerms) => ({
+            ...prevTerms,
+            role: value
+        }));
+    };
+
+    const handleStatusChange = (value) => {
+        setSearchTerms((prevTerms) => ({
+            ...prevTerms,
+            voided: value
+        }));
+    };
+
+    const fetchUsers = (searchTerms) => {
         setIsLoading(true);
         try {
-            dispatch(getUsersThunk({searchValue: searchTerm}));
+            dispatch(getUsersThunk({ searchTerms: searchTerms }));
         } catch (error) {
             console.error(error);
         } finally {
             setIsLoading(false);
         }
     };
-    useEffect(() => {
-        fetchUsers();
-    }, [debouncedSearchTerm]);
+
     return (
         <>
-            {" "}
             {showForm && (
                 <FormUser
                     closeForm={closeForm}
@@ -183,31 +250,85 @@ export default function UserMangagement() {
             <div className="px-6 py-3 flex flex-col  w-full">
                 <div className="flex flex-col gap-4 w-full">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center justify-end gap-3">
-                            {/*<Select*/}
-                            {/*    defaultValue="Sắp xếp"*/}
-                            {/*    style={{*/}
-                            {/*        width: 200,*/}
-                            {/*    }}*/}
-                            {/*    onChange={handleSort}*/}
-                            {/*    options={[*/}
-                            {/*        {*/}
-                            {/*            value: "jack",*/}
-                            {/*            label: "Thứ tự tăng dần",*/}
-                            {/*        },*/}
-                            {/*        {*/}
-                            {/*            value: "lucy",*/}
-                            {/*            label: "Thứ tự giảm dần",*/}
-                            {/*        },*/}
-                            {/*    ]}*/}
-                            {/*/>*/}
-                            <Input
-                                className="w-[300px]"
-                                placeholder="Tìm kiếm người dùng theo tên"
-                                onChange={(e) => handleSearch(e.target.value)}
-                            />
-                            {/*<CachedIcon/>*/}
-                        </div>
+                        <Form
+                            className="fade-down bg-white w-[85%] px-[24px] py-[20px] rounded"
+                            style={{
+                                border: "1px solid #ccc",
+                                padding: "20px",
+                            }}
+                            layout="vertical"
+                        >
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={6}>
+                                    <Form.Item label="Tên tài khoản" name="username">
+                                        <Input
+                                            name="username"
+                                            value={searchTerms.username}
+                                            placeholder="Tìm kiếm theo tên tài khoản"
+                                            onChange={handleInputChange}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Tên người dùng" name="fullName">
+                                        <Input
+                                            name="fullName"
+                                            value={searchTerms.fullName}
+                                            placeholder="Tìm kiếm theo tên người dùng"
+                                            onChange={handleInputChange}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Số điện thoại" name="phone">
+                                        <Input
+                                            name="phone"
+                                            value={searchTerms.phone}
+                                            placeholder="Tìm kiếm theo số điện thoại"
+                                            onChange={handleInputChange}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Email" name="email">
+                                        <Input
+                                            name="email"
+                                            value={searchTerms.email}
+                                            placeholder="Tìm kiếm theo email"
+                                            onChange={handleInputChange}
+                                        />
+                                    </Form.Item>
+                                </Grid>
+                                <Grid item xs={12} md={6}>
+                                    <Form.Item label="Ngày tạo" name="createDate">
+                                        <DatePicker
+                                            placeholder="Tìm kiếm theo ngày tạo"
+                                            onChange={handleDateChange}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Quyền" name="role">
+                                        <Select
+                                            placeholder="Tìm kiếm theo quyền"
+                                            value={searchTerms.role}
+                                            options={roles}
+                                            onChange={handleRoleChange}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Trạng thái" name="voided">
+                                        <Select
+                                            placeholder="Tìm kiếm theo trạng thái"
+                                            value={searchTerms.voided}
+                                            options={statuses}
+                                            onChange={handleStatusChange}
+                                        />
+                                    </Form.Item>
+                                </Grid>
+                            </Grid>
+                            <div>
+                                <Button type="primary" onClick={handleSearch}>
+                                    <SearchOutlined /> Tìm kiếm
+                                </Button>
+                                {removeFilter && (
+                                    <Button type="dashed" onClick={handleRemoveFilter} style={{ marginLeft: "20px" }}>
+                                        <CloseOutlined /> Bỏ lọc
+                                    </Button>
+                                )}
+                            </div>
+                        </Form>
                         <Button type="primary" className="bg-blue-600" onClick={openForm}>
                             Thêm người dùng
                         </Button>
@@ -218,9 +339,9 @@ export default function UserMangagement() {
                                 <Grid
                                     item
                                     xs={12}
-                                    style={{display: "flex", justifyContent: "center"}}
+                                    style={{ display: "flex", justifyContent: "center" }}
                                 >
-                                    <CircularProgress/>
+                                    {isLoading ? <CircularProgress /> : <h5>Không có dữ liệu</h5>}
                                 </Grid>
                             ) : (
                                 <Table

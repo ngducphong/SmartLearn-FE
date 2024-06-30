@@ -25557,3 +25557,14 @@ input[type="password"]::-ms-clear {
 .fixed-button-chat:hover {
   background-color: #f53b01; /* Màu nền khi hover */
 }
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+}

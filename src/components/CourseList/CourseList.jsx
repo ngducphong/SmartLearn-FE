@@ -5,6 +5,7 @@ import {HeartFilled, HeartOutlined} from "@ant-design/icons";
 import {favouriteCourse} from "../../api/courseAPIs.js";
 
 export default function CourseList({item, isLogin, isMyCourse}) {
+    const formattedPrice = (price) => Number(price).toLocaleString('vi-VN');
     const [isLike, setIsLike] = useState(false);
     const handleFavourite =  async (id) => {
         await favouriteCourse(id);
@@ -57,6 +58,8 @@ export default function CourseList({item, isLogin, isMyCourse}) {
                             <h3 className="title">
                                 {item.subDescription}
                             </h3>
+                            { isMyCourse === false && (item.isRegister === null || item.isRegister === false) && <p className="">Giá
+                                tiền: {item.price ? formattedPrice(item.price) + 'đ' : "Miễn phí"} </p>}
                         </div>
                         <div>
                             <div dangerouslySetInnerHTML={{__html: item.description}}/>

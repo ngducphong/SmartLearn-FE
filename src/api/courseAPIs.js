@@ -1,19 +1,49 @@
 import {notify} from "../utils/notification";
 import {formDataAxios, jsonAxios} from "./api.base.url";
 
-export const getAllCourses = async (page, searchValue, size, home) => {
+export const getAllCourses = async (page, searchValue, size, home, categories) => {
     try {
-        if (searchValue) {
-            const response = await jsonAxios.get(
-                `/api/v1/course/paging?page=${page}&size=${size}&title=${searchValue}`
-            );
+        if (searchValue && !categories) {
+            let url = `/api/v1/course/paging?page=${page}&size=${size}`;
+
+            if (searchValue.name) {
+                url += `&title=${searchValue.name}`;
+            }
+
+            if (searchValue.createDate) {
+                url += `&createDate=${searchValue.createDate}`;
+            }
+
+            if (searchValue.price) {
+                url += `&price=${searchValue.price}`;
+            }
+
+            if (searchValue.voided) {
+                url += `&voided=${searchValue.voided}`;
+            }
+
+            const response = await jsonAxios.get(url);
+
             return response.data;
         } else if (home) {
             const response = await jsonAxios.get(
                 `/api/v1/course/paging?page=${page}&size=${size}&home=${home}`
             );
             return response.data;
-        } else {
+        }else if (categories) {
+            const courseIdsQuery = categories.map(id => `courses=${id}`).join('&');
+            let url = `/api/v1/course/paging?page=${page}&size=${size}&${courseIdsQuery}`;
+            if (searchValue && searchValue.name){
+                url += `&title=${searchValue.name}`;
+            }
+            if (searchValue && searchValue.price) {
+                url += `&price=${searchValue.price}`;
+            }
+            const response = await jsonAxios.get(
+                url
+            );
+            return response.data;
+        }else {
             const response = await jsonAxios.get(
                 `/api/v1/course/paging?page=${page}&size=${size}`
             );
@@ -24,11 +54,25 @@ export const getAllCourses = async (page, searchValue, size, home) => {
     }
 };
 
-export const getMyCourses = async (page, searchValue, size) => {
+export const getMyCourses = async (page, searchValue, size, categories, priceRange) => {
     try {
-        if (searchValue) {
+        if (searchValue || categories || priceRange) {
+            let url = `/api/v1/course/get-my-course?page=${page}&size=${size}`;
+            if (searchValue){
+                url += `&title=${searchValue}`;
+            }
+            if (priceRange){
+                url += `&price=${priceRange}`;
+            }
+            if (categories && categories.length > 0){
+                const courseIdsQuery = categories?.map(id => `courses=${id}`).join('&');
+                if (courseIdsQuery ){
+                    url += `&${courseIdsQuery}`;
+                }
+
+            }
             const response = await jsonAxios.get(
-                `/api/v1/course/get-my-course?page=${page}&size=${size}&title=${searchValue}`
+                url
             );
             return response.data;
         } else {
@@ -39,6 +83,7 @@ export const getMyCourses = async (page, searchValue, size) => {
         }
 
     } catch (error) {
+        console.log(error)
         notify("error", "Có lỗi xảy ra khi lấy dữ liệu getMyCourses");
     }
 };

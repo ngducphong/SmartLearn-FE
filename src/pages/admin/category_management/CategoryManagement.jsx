@@ -1,14 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import MyModal from "../../../components/modal/Modal.jsx";
-import FormAddCourse from "../../../components/form/FormAddCourse.jsx";
-import FormEditCourse from "../../../components/form/FormEditCourse.jsx";
-import {Button, Input, Table} from "antd";
-import {CircularProgress, Grid} from "@mui/material";
-import Pagination from "@mui/material/Pagination";
-import {getAllCoursesAPI} from "../../../redux/reducer/courseSlice.js";
-import useDebounce from "../../../hooks/useDebounce.js";
-import {addNewCategory, editCategory, getPageCategory} from "../../../api/categoryAPIs.js";
 import FormAddCategory from "../../../components/form/FormAddCategory.jsx";
+import { Button, Input, Select, DatePicker, Form, Table } from "antd";
+import { CircularProgress, Grid } from "@mui/material";
+import Pagination from "@mui/material/Pagination";
+import { addNewCategory, editCategory, getPageCategory } from "../../../api/categoryAPIs.js";
+import { CloseOutlined } from "@ant-design/icons";
+// import moment from 'moment'; // Import moment để sử dụng cho DatePicker
 
 export default function CategoryManagement() {
     //#region State
@@ -19,35 +17,34 @@ export default function CategoryManagement() {
     const [pagination, setPagination] = useState(1);
     const [editCategoryInfo, setEditCategoryInfo] = useState(null);
     const [showFormEdit, setShowFormEdit] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerms, setSearchTerms] = useState({
+        name: "",
+        createDate: null,
+        voided: ""
+    });
     const [isLoadingFetch, setIsLoadingFetch] = useState(false);
-    const debouncedSearchTerm = useDebounce(searchTerm, 2000);
     //#endregion
 
     const [listCategory, setListCategory] = useState([]);
     const [categoryPage, setCategoryPage] = useState();
-
     const [isLoadingListCategory, setIsLoadingListCategory] = useState(false);
-    const getListCategory = async (page, searchValue, size) => {
-        setIsLoadingListCategory(true)
-        const data = await getPageCategory(page, searchValue ,size);
+    const [removeFilter, setRemoveFilter] = useState(false);
+
+    const getListCategory = async (page, searchTerms, size) => {
+        setIsLoadingListCategory(true);
+        const data = await getPageCategory(page, searchTerms, size);
         setCategoryPage(data.totalPages);
         setListCategory(data.content);
-        setIsLoadingListCategory(false)
-    }
-    // useEffect(() => {
-    //     getListCategory(0, null, 2);
-    // }, []);
+        setIsLoadingListCategory(false);
+    };
 
-
-    // Hàm tính toán số thứ tự cho mỗi dòng dữ l  iệu
     const calculateIndex = (index) => index + 1;
-    // Click chuyển trang
-    const handlePageChange = (page, value) => {
-        getListCategory(value-1, null, 2)
+
+    const handlePageChange = (event, value) => {
+        getListCategory(value - 1, searchTerms, 2);
         setPagination(value);
     };
-    // Thêm key khi map
+
     const dataSource = listCategory?.map((category) => ({
         ...category,
         key: category.id,
@@ -103,52 +100,45 @@ export default function CategoryManagement() {
         {
             title: "Chức năng",
             align: "center",
-            render: (item) => {
-                return (
-                    <div className="flex justify-evenly ">
-                        <Button onClick={() => handleEditCategory(item)}>Chỉnh sửa</Button>
-                    </div>
-                );
-            },
+            render: (item) => (
+                <div className="flex justify-evenly">
+                    <Button onClick={() => handleEditCategory(item)}>Chỉnh sửa</Button>
+                </div>
+            ),
         },
     ];
 
-    //Hàm hiển thị form thêm mới khóa học
     const openForm = () => {
         setShowForm(true);
     };
-    //Hàm đóng form thêm mới khóa học
+
     const closeForm = () => {
         setShowForm(false);
     };
-    //Hàm hiển thị form sửa khóa học
+
     const openFormEdit = () => {
         setShowFormEdit(true);
     };
-    //Hàm đóng form sửa khóa học
+
     const closeFormEdit = () => {
         setShowFormEdit(false);
     };
-    // Hiển thị modal mô tả
+
     const handleShowModal = (description) => {
         setSelectedCourse(description);
         setIsModalVisible(true);
     };
-    // Tắt modal mô tả
+
     const handleCancelModal = () => {
         setIsModalVisible(false);
     };
-    // Change...
-    const handleChange = (value) => {
-        console.log(`selected ${value}`);
-    };
-    // Thêm khóa học
+
     const handleAddNewCategory = async (newCategory, onEnd) => {
         try {
             await addNewCategory(newCategory);
             setFlag(!flag);
             closeForm();
-            getListCategory(0, null, 2);
+            getListCategory(0, searchTerms, 2);
         } catch (error) {
             console.log(error);
         } finally {
@@ -156,118 +146,171 @@ export default function CategoryManagement() {
         }
     };
 
-    // Tìm kiếm khóa học
-    const handleSearch = (searchValue) => {
-        setSearchTerm(searchValue);
+    const handleSearch = () => {
+        setRemoveFilter(true);
+        getListCategory(0, searchTerms, 2);
     };
-    const fetchCourses = () => {
-        try {
-            setIsLoadingFetch(true);
-            getListCategory(0, searchTerm, 2)
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsLoadingFetch(false);
-        }
+
+    const handleRemoveFilter = () => {
+        setRemoveFilter(false);
+        setSearchTerms({
+            name: "",
+            createDate: null,
+            voided: ""
+        });
+        getListCategory(0, {
+            name: "",
+            createDate: null,
+            voided: ""
+        }, 2);
     };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setSearchTerms((prevTerms) => ({
+            ...prevTerms,
+            [name]: value,
+        }));
+    };
+
+    const handleDateChange = (date, dateString) => {
+        setSearchTerms((prevTerms) => ({
+            ...prevTerms,
+            createDate: dateString,
+        }));
+    };
+
+    const handleStatusChange = (value) => {
+        setSearchTerms((prevTerms) => ({
+            ...prevTerms,
+            voided: value,
+        }));
+    };
+
     useEffect(() => {
-        fetchCourses();
-    }, [debouncedSearchTerm]);
-    // Hàm chỉnh sửa thông tin khóa học
+        getListCategory(0, {}, 2);
+    }, []);
+
     const handleEditCategory = (categoryItem) => {
         setEditCategoryInfo(categoryItem);
         openFormEdit();
     };
-    // Hàm lưu thông tin khi sửa khóa học
+
     const handleSave = async (categoryEdit) => {
         try {
             await editCategory(categoryEdit);
             setPagination(1);
             setFlag(!flag);
             closeFormEdit();
-            getListCategory(0, null, 2);
+            getListCategory(0, searchTerms, 2);
         } catch (error) {
             console.log(error);
         }
     };
-  return (
-      <div className="px-6 py-3 flex flex-col  w-full">
-        <MyModal
-            isOpen={isModalVisible}
-            onOk={handleCancelModal}
-            onCancel={handleCancelModal}
-            description={selectedCourse}
-        />
-        {/* Form thêm mới khóa học */}
-        {showForm && (
-            <FormAddCategory closeForm={closeForm} handleOk={handleAddNewCategory} />
-        )}
-        {showFormEdit && (
-            <FormAddCategory
-                closeForm={closeFormEdit}
-                handleOk={handleSave}
-                categoryInfo={editCategoryInfo}
+
+    return (
+        <div className="px-6 py-3 flex flex-col w-full">
+            <MyModal
+                isOpen={isModalVisible}
+                onOk={handleCancelModal}
+                onCancel={handleCancelModal}
+                description={selectedCourse}
             />
-        )}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center justify-end gap-3">
-              {/*<Select*/}
-              {/*  defaultValue="Sắp xếp khóa học"*/}
-              {/*  style={{*/}
-              {/*    width: 200,*/}
-              {/*  }}*/}
-              {/*  onChange={handleChange}*/}
-              {/*  options={[*/}
-              {/*    {*/}
-              {/*      value: "jack",*/}
-              {/*      label: "Thứ tự tăng dần",*/}
-              {/*    },*/}
-              {/*    {*/}
-              {/*      value: "lucy",*/}
-              {/*      label: "Thứ tự giảm dần",*/}
-              {/*    },*/}
-              {/*  ]}*/}
-              {/*/>*/}
-              <Input
-                  className="w-[300px]"
-                  placeholder="Tìm kiếm khóa học theo tên"
-                  onChange={(e) => handleSearch(e.target.value)}
-              />
-              {/*<CachedIcon />*/}
+            {showForm && (
+                <FormAddCategory closeForm={closeForm} handleOk={handleAddNewCategory}/>
+            )}
+            {showFormEdit && (
+                <FormAddCategory
+                    closeForm={closeFormEdit}
+                    handleOk={handleSave}
+                    categoryInfo={editCategoryInfo}
+                />
+            )}
+            <div className="flex flex-col gap-4">
+                <div className="flex items-center justify-between">
+                    <Form
+                        className="fade-down bg-white w-[75%] px-[24px] py-[20px] rounded"
+                        style={{
+                            border: "1px solid #ccc",
+                            padding: "20px",
+                        }}
+                        layout="vertical"
+                    >
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} md={6}>
+                                <Form.Item label="Tên danh mục" name="name">
+                                    <Input
+                                        name="name"
+                                        value={searchTerms.name}
+                                        placeholder="Tìm kiếm theo tên danh mục"
+                                        onChange={handleInputChange}
+                                    />
+                                </Form.Item>
+                                <Form.Item label="Ngày tạo" name="createDate">
+                                    <DatePicker
+                                        placeholder="Tìm kiếm theo ngày tạo"
+                                        // value={searchTerms.createDate ? moment(searchTerms.createDate) : null}
+                                        onChange={handleDateChange}
+                                    />
+                                </Form.Item>
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <Form.Item label="Trạng thái" name="voided">
+                                    <Select
+                                        placeholder="Tìm kiếm theo trạng thái"
+                                        value={searchTerms.voided}
+                                        options={[
+                                            { value: true, label: "Bị Khóa" },
+                                            { value: false, label: "Đang hoạt động" }
+                                        ]}
+                                        onChange={handleStatusChange}
+                                    />
+                                </Form.Item>
+                            </Grid>
+                        </Grid>
+                        <div>
+                            <Button type="primary" onClick={handleSearch}>
+                                Tìm kiếm
+                            </Button>
+                            {removeFilter && (
+                                <Button type="dashed" onClick={handleRemoveFilter} style={{ marginLeft: "20px" }}>
+                                    <CloseOutlined /> Bỏ lọc
+                                </Button>
+                            )}
+                        </div>
+                    </Form>
+                    <Button onClick={openForm} type="primary" className="bg-blue-600">
+                        Thêm danh mục
+                    </Button>
+                </div>
+                <div className="table-container relative">
+                    <div className="mb-8">
+                        {isLoadingListCategory || isLoadingFetch ? (
+                            <Grid
+                                item
+                                xs={12}
+                                style={{ display: "flex", justifyContent: "center" }}
+                            >
+                                <CircularProgress /> <h5>Không có dữ liệu</h5>
+                            </Grid>
+                        ) : (
+                            <Table
+                                columns={columns}
+                                dataSource={dataSource}
+                                pagination={false}
+                            />
+                        )}
+                    </div>
+                    <div className="flex justify-center">
+                        <Pagination
+                            count={categoryPage}
+                            page={pagination}
+                            onChange={handlePageChange}
+                            color="primary"
+                        />
+                    </div>
+                </div>
             </div>
-            <Button onClick={openForm} type="primary" className="bg-blue-600">
-              Thêm khóa học
-            </Button>
-          </div>
-          <div className="table-container relative">
-            <div className="mb-8">
-              {isLoadingListCategory || isLoadingFetch ? (
-                  <Grid
-                      item
-                      xs={12}
-                      style={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <CircularProgress style={{ color: "red" }} />
-                  </Grid>
-              ) : (
-                  <Table
-                      columns={columns}
-                      dataSource={dataSource}
-                      pagination={false}
-                  />
-              )}
-            </div>
-            <div className="flex justify-center">
-              <Pagination
-                  count={categoryPage}
-                  page={pagination}
-                  onChange={handlePageChange}
-                  color="primary"
-              />
-            </div>
-          </div>
         </div>
-      </div>
-  );
+    );
 }

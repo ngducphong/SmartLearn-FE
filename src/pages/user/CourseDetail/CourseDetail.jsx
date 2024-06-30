@@ -228,12 +228,14 @@ export default function CourseDetail() {
                                                         <div className="course-fee">
                                                             <img src={currentCourse?.image} alt=""/>
                                                         </div>
-                                                        <div
+                                                        {currentCourse?.totalChapter ? <div
                                                             className="btn btn-enroll w-100"
                                                             onClick={learningCourse}
                                                         >
                                                             Học ngay
-                                                        </div>
+                                                        </div> :
+                                                            <h4>Các bài học đang cập nhập</h4>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>

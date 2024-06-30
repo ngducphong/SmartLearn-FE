@@ -48,8 +48,45 @@ export const loginApi = async (user) => {
 export const getAllUsers = async (searchQuery) => {
     try {
         if (searchQuery) {
+            const search = searchQuery?.searchTerms;
+
+            console.log( (search))
+
+            let url = 'api/v1/user/page?';
+            let params = [];
+
+            if (search.name) {
+                params.push(`name=${search.name}`);
+            }
+
+            if (search.username) {
+                params.push(`username=${search.username}`);
+            }
+
+            if (search.email) {
+                params.push(`email=${search.email}`);
+            }
+
+            if (search.phone) {
+                params.push(`phone=${search.phone}`);
+            }
+
+            if (search.createDate) {
+                params.push(`createDate=${search.createDate}`);
+            }
+
+            if (search.voided) {
+                params.push(`voided=${search.voided}`);
+            }
+
+            if (search.role) {
+                params.push(`role=${search.role}`);
+            }
+
+            url += params.join('&');
+
             const response = await jsonAxios.get(
-                `api/v1/user/page?name=${searchQuery}`
+                url
             );
             return response;
         } else {
@@ -67,8 +104,14 @@ export const getAllUsers = async (searchQuery) => {
 };
 export const createUser = async (userData) => {
     try {
-        await jsonAxios.post("api/v1/user/create-user", userData);
-        notify("success", "Tạo người dùng thành công");
+        const res = await jsonAxios.post("api/v1/user/create-user", userData);
+        if (res.data === "Success"){
+            notify("success", "Tạo người dùng thành công");
+        }else {
+            console.log(res.data)
+            notify("error", res.data);
+        }
+
     } catch (error) {
         if (error.response.status === 401) {
             notify("error", "Bạn không có quyền");
