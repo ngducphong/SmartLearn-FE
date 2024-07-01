@@ -9,6 +9,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
+
 import {
   addNewLesson,
   deleteLesson,
@@ -20,7 +21,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Button,
   ButtonGroup,
   CircularProgress,
   Grid,
@@ -36,7 +36,13 @@ import { getAllCoursesAPI } from "../../../redux/reducer/courseSlice";
 import { notify } from "../../../utils/notification";
 import VideoComponent from "../../../components/video/VideoComponent";
 import CKEditorComponent from "../../../components/ckEditor/CkEditorComponent";
+import { useNavigate } from "react-router-dom";
+import {Button} from "antd";
+import {LeftOutlined} from "@ant-design/icons";
+import {getOneCourses} from "../../../api/courseAPIs.js";
+
 export default function DetailCourse() {
+  const navigate = useNavigate();
   const chapters = useSelector((state) => state.chapterSlice.chapters);
   const lesson = useSelector((state) => state.lessonSlice.lesson);
   const isLoading = useSelector((state) => state.chapterSlice.loading);
@@ -52,15 +58,23 @@ export default function DetailCourse() {
   const [editChapter, setEditChapter] = useState(null);
   const [choice, setChoice] = useState("video");
   const [isSaving, setIsSaving] = useState(false);
+  const [course, setCourse] = useState();
 
   const { id } = useParams();
   const dispatch = useDispatch();
+
+  const getCourse = async (id) => {
+    const res = await getOneCourses(id);
+    setCourse(res)
+  };
+
   useEffect(() => {
     dispatch(getChaptersThunk(id));
     dispatch(getLessonsThunk());
     dispatch(getAllCoursesAPI({ page: 0, size: 4 }));
   }, [dispatch, id]);
   useEffect(() => {
+    getCourse(id);
     // Tự động áp dụng highlight cho tất cả code blocks
     hljs.highlightAll();
   }, []);
@@ -200,74 +214,15 @@ export default function DetailCourse() {
       <div className="w-full">
         <div className="bg-[#f8f8f8]  py-20 overflow-hidden h-full">
           <div className="my-0 mx-auto max-w-[1500px]">
+            <Button onClick={() => navigate(`/admin/management`)} icon={<LeftOutlined />} style={{marginBottom:"10px"}}>Quay lại</Button>
+
             <h1 className="text-2xl font-bold text-[#170F49]  bg-[#f8f8f8] rounded-lg mb-10">
               <span className="text-rikkei">Khóa học: </span>
-              {chapters[0]?.courseName}{" "}
+              {course?.title}{" "}
             </h1>
             <div className="my-0 mx-auto max-w-[1500px]">
-              {/*<Box*/}
-              {/*  sx={{*/}
-              {/*    display: "flex",*/}
-              {/*    alignItems: "center",*/}
-              {/*    "& > *": {*/}
-              {/*      m: 1,*/}
-              {/*    },*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  {selectedLesson ? (*/}
-              {/*    <ButtonGroup*/}
-              {/*      variant="outlined"*/}
-              {/*      aria-label="Basic button group"*/}
-              {/*    >*/}
-              {/*      <Button*/}
-              {/*        onClick={() => setChoice("video")}*/}
-              {/*        startIcon={<YouTubeIcon />}*/}
-              {/*      >*/}
-              {/*        video*/}
-              {/*      </Button>*/}
-              {/*      <Button*/}
-              {/*        onClick={() => setChoice("lesson")}*/}
-              {/*        startIcon={<SourceIcon />}*/}
-              {/*      >*/}
-              {/*        Bài học*/}
-              {/*      </Button>*/}
-              {/*      {choice === "lesson" ? (*/}
-              {/*        <Button*/}
-              {/*          onClick={handleSaveDescription}*/}
-              {/*          startIcon={*/}
-              {/*            isSaving ? (*/}
-              {/*              <CircularProgress size={20} color="inherit" />*/}
-              {/*            ) : (*/}
-              {/*              <SaveAltIcon />*/}
-              {/*            )*/}
-              {/*          }*/}
-              {/*          disabled={isSaving}*/}
-              {/*        >*/}
-              {/*          {isSaving ? "Đang lưu..." : "Lưu"}*/}
-              {/*        </Button>*/}
-              {/*      ) : (*/}
-              {/*        ""*/}
-              {/*      )}*/}
-              {/*    </ButtonGroup>*/}
-              {/*  ) : (*/}
-              {/*    ""*/}
-              {/*  )}*/}
-              {/*</Box>*/}
               <div className="flex flex-wrap justify-between">
-                {/*<div className="rounded-2xl overflow-hidden max-w-[70%] w-full relative h-[610px] ">*/}
-                {/*  {choice === "video" ? (*/}
-                {/*    <div className="px-[100px] bg-black">*/}
-                {/*      <VideoComponent sourceVideo={"https://www.youtube.com/embed/"+sourceVideo.split("=")[1]} />*/}
-                {/*    </div>*/}
-                {/*  ) : (*/}
-                {/*    <div className="bg-slate-50">*/}
-                {/*      <CKEditorComponent*/}
-                {/*        getValue={handleGetValue}*/}
-                {/*        oldValue={description}*/}
-                {/*      />*/}
-                {/*    </div>*/}
-                {/*  )}*/}
-                {/*</div>*/}
+
                 <div className="max-w-[90%] w-full flex flex-col bg-white max-h-[610px] p-2 overflow-y-auto">
                   {isLoading ? (
                     <>

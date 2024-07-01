@@ -7,9 +7,12 @@ import MyModal from "../../../components/modal/Modal.jsx";
 import FormAddCourse from "../../../components/form/FormAddCourse.jsx";
 import FormEditCourse from "../../../components/form/FormEditCourse.jsx";
 import { addNewCourse, editCourse, getAllCourses } from "../../../api/courseAPIs.js";
+import { useNavigate } from "react-router-dom";
+
 const { Option } = Select;
 
 export default function CourseManagement() {
+  const navigate = useNavigate();
   //#region State
   const [showForm, setShowForm] = useState(false);
   const [flag, setFlag] = useState(true);
@@ -117,12 +120,18 @@ export default function CourseManagement() {
     {
       title: "Chức năng",
       align: "center",
-      render: (item) => (
-          <div className="flex justify-evenly">
-            <Button onClick={() => handleEditCourse(item)}>Chỉnh sửa</Button>
-          </div>
-      ),
+      render: (item) => {
+        return (
+            <div className="flex justify-evenly ">
+              <Button onClick={() => navigate(`/admin/course/${item.id}`)}>
+                Chi tiết khóa học
+              </Button>
+              <Button onClick={() => handleEditCourse(item)}>Chỉnh sửa</Button>
+            </div>
+        );
+      },
     },
+
   ];
 
   const openForm = () => {
@@ -247,8 +256,8 @@ export default function CourseManagement() {
         )}
         {showFormEdit && (
             <FormEditCourse
-                closeForm={closeFormEdit}
-                handleOk={handleSave}
+                closeFormEdit={closeFormEdit}
+                handleSave={handleSave}
                 courseInfo={editCourseInfo}
             />
         )}

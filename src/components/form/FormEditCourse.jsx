@@ -8,12 +8,12 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import {toolbarOptions, formats} from "../../utils/toolbarOptions";
 import {getAllCategory, getCategoryByCourseId} from "../../api/categoryAPIs.js";
 
-function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
+function FormEditCourse({closeFormEdit, handleSave, courseInfo}) {
     const [imageUrl, setImageUrl] = useState("");
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [imageFile, setImageFile] = useState();
-    const [price, setPrice] = useState();
+    const [price, setPrice] = useState("");
     const [subDescription, setSubDescription] = useState("");
     const formRef = useRef(null);
     const [courseStatus, setCourseStatus] = useState(
@@ -21,29 +21,24 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
     );
     const [categoryShow, setCategoryShow] = useState("");
     const [categoryId, setCategoryId] = useState();
-    const [categoryList, setCategoryList] = useState();
+    const [categoryList, setCategoryList] = useState([]);
 
     const getListCategory = async () => {
         const data = await getAllCategory();
         setCategoryList(data);
-    }
+    };
+
     const getCategoryByCourse = async (id) => {
         const data = await getCategoryByCourseId(id);
-        setCategoryShow(data.name)
-        setCategoryId(data.id)
-    }
+        setCategoryShow(data.name);
+        setCategoryId(data.id);
+    };
+
     useEffect(() => {
         getListCategory();
         getCategoryByCourse(courseInfo.id);
-
     }, []);
 
-    const handleClickOutside = (event) => {
-        // if (formRef.current && !formRef.current.contains(event.target)) {
-        //     closeFormEdit(); // Đóng form nếu click bên ngoài form
-        // }
-    };
-    // Gán giá trị cho các state từ props courseInfo khi component được render
     useEffect(() => {
         if (courseInfo) {
             setTitle(courseInfo.title);
@@ -51,9 +46,14 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
             setImageUrl("http://localhost:8080/img/" + courseInfo.image);
             setSubDescription(courseInfo.subDescription);
             setPrice(courseInfo.price);
-
         }
     }, [courseInfo]);
+
+    const handleClickOutside = (event) => {
+        if (formRef.current && !formRef.current.contains(event.target)) {
+            closeFormEdit();
+        }
+    };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -68,8 +68,7 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
     };
 
     const handleEditCourse = () => {
-        // Gọi hàm handleEdit và truyền thông tin cập nhật của khóa học
-        handleEdit({
+        handleSave({
             id: courseInfo.id,
             title,
             description,
@@ -86,27 +85,26 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
         setTitle("");
         setDescription("");
         setImageUrl("");
-        setPrice("")
+        setPrice("");
     };
 
     const handleSetCategory = (name, id) => {
         setCategoryShow(name);
         setCategoryId(id);
-    }
-    const items = categoryList?.map(
-        item => (
-            {
-                key: item.id,
-                label: (
-                    <p target="_blank" rel="noopener noreferrer" onClick={() => {
-                        handleSetCategory(item.name, item.id)
-                    }}>
-                        {item.name}
-                    </p>
-                ),
-            }
-        )
-    )
+    };
+
+    const items = categoryList?.map((item) => ({
+        key: item.id,
+        label: (
+            <p
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => handleSetCategory(item.name, item.id)}
+            >
+                {item.name}
+            </p>
+        ),
+    }));
 
     return (
         <>
@@ -127,18 +125,15 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
                         <label style={{display: 'block', marginBottom: '8px'}} htmlFor="">
                             Chọn danh mục
                         </label>
-
                         <Space direction="vertical">
                             <Space wrap>
                                 <Dropdown
-                                    menu={{
-                                        items,
-                                    }}
+                                    menu={{items}}
                                     placement="bottomLeft"
                                     arrow
                                 >
                                     <Button style={{width: '15rem'}}>
-                                        {categoryShow === "" ? ("Chọn danh mục") : categoryShow}
+                                        {categoryShow === "" ? "Chọn danh mục" : categoryShow}
                                     </Button>
                                 </Dropdown>
                             </Space>
@@ -246,4 +241,4 @@ function FormEditCourse({closeFormEdit, handleEdit, courseInfo}) {
     );
 }
 
-export default memo(FormEditCourse);
+export default FormEditCourse;
